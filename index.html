@@ -124,6 +124,7 @@
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
 		if (effect === "Restore Original Image") {
+			ctx.clearRect(canvas.width, canvas.height);
 			ctx.drawImage(imageElement, 0, 0);
 			return;
 		}
