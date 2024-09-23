@@ -22,7 +22,7 @@
 		<option>Black and White</option>
 		<option>Brighten</option>
 		<option>Invert Color</option>
-		<option>Shift RGB Channels Right</option>
+		<option>Shift RGB Channels Left</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>All-Opaque</option>
 		<option>Opacity Visualization</option>
@@ -95,13 +95,13 @@
 			params[0].input.step = "0.2"
 			params[0].label.style = ""
 			params[0].label.textContent = "Multiplier"
-		} else if (effectSelect.value === "Opacity Visualization") {
+		} else if (effectSelect.value === "Opacity Visualization" || effectSelect.value === "All-Opaque") {
 			params[0].input.style = ""
 			params[0].input.type = "checkbox"
 			params[0].input.min = ""
 			params[0].input.max = ""
 			params[0].input.step = ""
-			params[0].input.checked = false
+			params[0].input.checked = effectSelect.value === "All-Opaque"
 			params[0].label.style = ""
 			params[0].label.textContent = "Include Invisible Colors"
 		} else {
@@ -170,7 +170,7 @@
 					data[i + 2] = 255 - data[i + 2];
 				}
 				break;
-			case 'Shift RGB Channels Right':
+			case 'Shift RGB Channels Left':
 				for (let i = 0; i < data.length; i += 4) {
 					const r = data[i]
 					const g = data[i + 1]
@@ -188,9 +188,10 @@
 					data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] / round) * round));
 				}
 				break;
-			case 'Full Opaqueness':
+			case 'All-Opaque':
+				const checked2 = !params[0].input.checked
 				for (let i = 3; i < data.length; i += 4) {
-					data[i] = 255;
+					data[i] = (checked2 && data[i] === 0) ? 0 : 255;
 				}
 				break;
 			case 'Opacity Visualization':
