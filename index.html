@@ -91,6 +91,15 @@
 			params[0].input.step = "0.2"
 			params[0].label.style = ""
 			params[0].label.textContent = "Multiplier"
+		} else if (effectSelect.value === "Opacity Visualization") {
+			params[0].input.style = ""
+			params[0].input.type = "checkbox"
+			params[0].input.min = ""
+			params[0].input.max = ""
+			params[0].input.step = ""
+			params[0].input.checked = false
+			params[0].label.style = ""
+			params[0].label.textContent = "Include Invisible Colors"
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
@@ -171,9 +180,10 @@
 				}
 				break;
 			case 'Opacity Visualization':
+				const checked = !params[0].input.checked
 				for (let i = 0; i < data.length; i += 4) {
 					data[i] = data[i + 1] = data[i + 2] = data[i + 3];
-					data[i + 3] = 255;
+					data[i + 3] = (checked && data[i + 3] === 0) ? 0 : 255;
 				}
 				break;
 		}
