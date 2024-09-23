@@ -21,6 +21,7 @@
 		<option>Brighten</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>All-Opaque</option>
+		<option>Opacity Visualization</option>
 		<option disabled style="color: red">Compression</option>
 		<option>Limit Color Palette</option>
 	</select>
@@ -29,6 +30,9 @@
 	<br>
 	<label for="param1" id="labelparam1" style="display: none"></label>
 	<input id="param1" style="display: none">
+	<br>
+	<label for="param2" id="labelparam2" style="display: none"></label>
+	<input id="param2" style="display: none">
 	<br>
 	<button id="apply">Apply Effect</button>
 </div>
@@ -45,6 +49,10 @@
 		{
 			input: document.getElementById('param1'),
 			label: document.getElementById('labelparam1')
+		},
+		{
+			input: document.getElementById('param2'),
+			label: document.getElementById('labelparam2')
 		}
 	];
 	fileInput.addEventListener('change', function () {
@@ -160,6 +168,12 @@
 			case 'Full Opaqueness':
 				for (let i = 3; i < data.length; i += 4) {
 					data[i] = 255;
+				}
+				break;
+			case 'Opacity Visualization':
+				for (let i = 0; i < data.length; i += 4) {
+					data[i] = data[i + 1] = data[i + 2] = data[i + 3];
+					data[i + 3] = 255;
 				}
 				break;
 		}
