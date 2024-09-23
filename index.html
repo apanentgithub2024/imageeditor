@@ -22,6 +22,7 @@
 		<option>Black and White</option>
 		<option>Brighten</option>
 		<option>Invert Color</option>
+		<option>Shift RGB Channels Right</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>All-Opaque</option>
 		<option>Opacity Visualization</option>
@@ -167,6 +168,16 @@
 					data[i] = 255 - data[i];
 					data[i + 1] = 255 - data[i + 1];
 					data[i + 2] = 255 - data[i + 2];
+				}
+				break;
+			case 'Shift RGB Channels Right':
+				for (let i = 0; i < data.length; i += 4) {
+					const r = data[i]
+					const g = data[i + 1]
+					const b = data[i + 2]
+					data[i] = g;
+					data[i + 1] = b;
+					data[i + 2] = r;
 				}
 				break;
 			case 'Limit Color Palette':
