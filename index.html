@@ -17,6 +17,8 @@
 		<option>B</option>
 		<option>Grayscale (by Brightness)</option>
 		<option>Grayscale (by Average)</option>
+		<option>Black and White</option>
+		<option>Invert Color</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>Full Opaqueness</option>
 	</select>
@@ -90,6 +92,19 @@
 				for (let i = 0; i < data.length; i += 4) {
 					const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
 					data[i] = data[i + 1] = data[i + 2] = avg;
+				}
+				break;
+			case 'Black and White':
+				for (let i = 0; i < data.length; i += 4) {
+					const con = Math.floor((data[i] + data[i + 1] + data[i + 2]) / 665) * 255;
+					data[i] = data[i + 1] = data[i + 2] = con;
+				}
+				break;
+			case 'Invert':
+				for (let i = 0; i < data.length; i += 4) {
+					data[i] = 255 - data[i];
+					data[i + 1] = 255 - data[i + 1];
+					data[i + 2] = 255 - data[i + 2];
 				}
 				break;
 			case 'Full Opaqueness':
