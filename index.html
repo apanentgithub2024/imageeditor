@@ -56,7 +56,7 @@
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
 		if (effect === "Restore Original Image") {
-			ctx.drawImage(img, 0, 0);
+			ctx.drawImage(imageElement, 0, 0);
 			return;
 		}
 		const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
