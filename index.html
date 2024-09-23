@@ -31,6 +31,8 @@
 		<option>Limit Color Palette</option>
 		<option disabled style="color: red">Randomization</option>
 		<option>Noise</option>
+		<option disabled style="color: green">Complex Color Filters</option>
+		<option>Replace Color With</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
@@ -115,12 +117,40 @@
 			params[0].input.step = "1"
 			params[0].label.style = ""
 			params[0].label.textContent = "Noise Depth"
+		} else if (effectSelect.value === "Replace Color With") {
+			params[0].input.style = ""
+			params[0].input.type = "color"
+			params[0].input.min = ""
+			params[0].input.max = ""
+			params[0].input.step = ""
+			params[0].label.style = ""
+			params[0].label.textContent = "Target Color"
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
 			params[0].label.textContent = ""
 		}
+		if (effectSelect.value === "Replace Color With") {
+			params[1].input.style = ""
+			params[1].input.type = "color"
+			params[1].input.min = ""
+			params[1].input.max = ""
+			params[1].input.step = ""
+			params[1].label.style = ""
+			params[1].label.textContent = "Color Replacement"
+		} else {
+			params[1].input.style = "display: none"
+			params[1].label.style = "display: none"
+			params[1].label.textContent = ""
+		}
 	})
+function hexToRGB(hex_color) {
+	hex_color = hex_color.replace(/^#/, "")
+	const red = parseInt(hex_color.slice(0, 2), 16)
+	const green = parseInt(hex_color.slice(2, 4), 16)
+	const blue = parseInt(hex_color.slice(4, 6), 16)
+	return [red, green, blue]
+}
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
 		if (effect === "Restore Original Image") {
@@ -219,6 +249,16 @@
 				for (let i = 0; i < data.length; i += 4) {
 					data[i] = data[i + 1] = data[i + 2] = data[i + 3];
 					data[i + 3] = (checked && data[i + 3] === 0) ? 0 : 255;
+				}
+				break;
+			case 'Replace Color With':
+				const target = hexToRGB(params[0].input.value)
+				const replac = hexToRGB(params[1].input.value)
+				for (let i = 0; i < data.length; i += 4) {
+					const r = data[i], g = data[i + 1], b = data[i + 2]
+					if (r === target[0] && g === target[1] && b === target[2]) {
+						[data[i], data[i + 1], data[i + 2]] = [replac[0], replac[1], replac[2]]
+					}
 				}
 				break;
 			case 'Noise':
