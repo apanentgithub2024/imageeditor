@@ -20,7 +20,8 @@
 		<option>Grayscale (by Brightness)</option>
 		<option>Grayscale (by Average)</option>
 		<option>Black and White</option>
-		<option>Brighten</option>
+		<option>Brighten (Multiplicative)</option>
+		<option>Brighten (Additive)</option>
 		<option>Invert Color</option>
 		<option>Shift RGB Channels Left</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
@@ -89,14 +90,14 @@
 			params[0].input.step = "1"
 			params[0].label.style = ""
 			params[0].label.textContent = "Rounding Number"
-		} else if (effectSelect.value === "Brighten") {
+		} else if (effectSelect.value === "Brighten (Multiplicative)" || effectSelect.value === "Brighten (Additive)") {
 			params[0].input.style = ""
 			params[0].input.type = "number"
-			params[0].input.min = "0"
+			params[0].input.min = effectSelect.value === "Brighten (Multiplicative)" ? "0" : "-255"
 			params[0].input.max = "255"
-			params[0].input.step = "0.2"
+			params[0].input.step = effectSelect.value === "Brighten (Multiplicative)" ? "0.2" : "1"
 			params[0].label.style = ""
-			params[0].label.textContent = "Multiplier"
+			params[0].label.textContent = effectSelect.value === "Brighten (Multiplicative)" ? "Multiplier" : "Adder"
 		} else if (effectSelect.value === "Opacity Visualization" || effectSelect.value === "All-Opaque") {
 			params[0].input.style = ""
 			params[0].input.type = "checkbox"
@@ -165,12 +166,20 @@
 					data[i] = data[i + 1] = data[i + 2] = con;
 				}
 				break;
-			case 'Brighten':
+			case 'Brighten (Multiplicative)':
 				const round2 = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
 					data[i] = Math.max(0, Math.min(255, Math.round(data[i] * round2)));
 					data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] * round2)));
 					data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] * round2)));
+				}
+				break;
+			case 'Brighten (Additive)':
+				const round2 = Number(params[0].input.value)
+				for (let i = 0; i < data.length; i += 4) {
+					data[i] = Math.max(0, Math.min(255, Math.round(data[i] + round2)));
+					data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] + round2)));
+					data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] + round2)));
 				}
 				break;
 			case 'Invert Color':
