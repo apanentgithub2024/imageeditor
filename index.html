@@ -96,7 +96,7 @@
 				break;
 			case 'Black and White':
 				for (let i = 0; i < data.length; i += 4) {
-					const con = Math.floor((data[i] + data[i + 1] + data[i + 2]) / 665) * 255;
+					const con = Math.floor(((data[i] + data[i + 1] + data[i + 2]) * 1.3) / 665) * 255;
 					data[i] = data[i + 1] = data[i + 2] = con;
 				}
 				break;
