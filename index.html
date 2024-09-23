@@ -28,6 +28,8 @@
 		<option>Opacity Visualization</option>
 		<option disabled style="color: red">Compression</option>
 		<option>Limit Color Palette</option>
+		<option disabled style="color: red">Randomization</option>
+		<option>Noise</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
@@ -104,6 +106,14 @@
 			params[0].input.checked = effectSelect.value === "All-Opaque"
 			params[0].label.style = ""
 			params[0].label.textContent = "Include Invisible Colors"
+		} else if (effectSelect.value === "Noise") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "0"
+			params[0].input.max = "255"
+			params[0].input.step = "1"
+			params[0].label.style = ""
+			params[0].label.textContent = "Noise Depth"
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
@@ -199,6 +209,14 @@
 				for (let i = 0; i < data.length; i += 4) {
 					data[i] = data[i + 1] = data[i + 2] = data[i + 3];
 					data[i + 3] = (checked && data[i + 3] === 0) ? 0 : 255;
+				}
+				break;
+			case 'Noise':
+				const round3 = Number(params[0].input.value)
+				for (let i = 0; i < data.length; i += 4) {
+					data[i] += Math.max(0, Math.min(255, data[i] + Math.round((Math.random() - 0.5) * 2)));
+					data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + Math.round((Math.random() - 0.5) * 2)));
+					data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + Math.round((Math.random() - 0.5) * 2)));
 				}
 				break;
 		}
