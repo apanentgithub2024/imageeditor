@@ -18,12 +18,16 @@
 		<option>Grayscale (by Brightness)</option>
 		<option>Grayscale (by Average)</option>
 		<option>Black and White</option>
-		<option>Invert Color</option>
+		<option>Limit Color Palette</option>
+		<option>Quantify</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>Full Opaqueness</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
+	<br>
+	<label for="param1" id="labelparam1" style="display: none"></label>
+	<input id="param1" style="display: none">
 	<br>
 	<button id="apply">Apply Effect</button>
 </div>
@@ -36,6 +40,12 @@
 	const effectSelect = document.getElementById('effect');
 	const currentEffect = document.getElementById('currenteffect');
 	const applyEffectButton = document.getElementById('apply');
+	const params = [
+		{
+			input: document.getElementById('param1'),
+			label: document.getElementById('labelparam1')
+		}
+	];
 	fileInput.addEventListener('change', function () {
 		const file = fileInput.files[0];
 		if (file) {
@@ -55,6 +65,21 @@
 			reader.readAsDataURL(file);
 		}
 	});
+	effectSelect.addEventListener('input', function() {
+		if (effectSelect.value === "Quantify") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "0"
+			params[0].input.max = "255"
+			params[0].input.step = "1"
+			params[0].label.style = ""
+			params[0].label.textContent = "Rounding Number"
+		} else {
+			params[0].input.style = "display: none"
+			params[0].label.style = "display: none"
+			params[0].label.textContent = ""
+		}
+	})
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
 		if (effect === "Restore Original Image") {
@@ -105,6 +130,14 @@
 					data[i] = 255 - data[i];
 					data[i + 1] = 255 - data[i + 1];
 					data[i + 2] = 255 - data[i + 2];
+				}
+				break;
+			case 'Limit Color Palette':
+				const round = Number(params[0].input.value)
+				for (let i = 0; i < data.length; i += 4) {
+					data[i] = Math.max(0, Math.min(255, Math.round(data[i] / round) * round));
+					data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] / round) * round));
+					data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] / round) * round));
 				}
 				break;
 			case 'Full Opaqueness':
