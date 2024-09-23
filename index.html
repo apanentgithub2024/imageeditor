@@ -8,6 +8,8 @@
 	<br>
 	<select id="effect">
 		<option style="color: grey" hidden>Select Effect</option>
+		<option disabled style="color: red">Restoration</option>
+		<option>Restore Original Image</option>
 		<option disabled style="color: red">Filters</option>
 		<option disabled style="color: darkred">Color Filters</option>
 		<option>R</option>
@@ -16,7 +18,7 @@
 		<option>Grayscale (by Brightness)</option>
 		<option>Grayscale (by Average)</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
-		<option>Anti-Transparency</option>
+		<option>Full Opaqueness</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
@@ -53,6 +55,10 @@
 	});
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
+		if (effect === "Restore Original Image") {
+			ctx.drawImage(img, 0, 0);
+			return;
+		}
 		const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 		const data = imgData.data;
 		switch (effect) {
@@ -64,13 +70,13 @@
 				break;
 			case 'G':
 				for (let i = 0; i < data.length; i += 4) {
-					data[i] = 0;	 // Red channel
+					data[i] = 0;     // Red channel
 					data[i + 2] = 0; // Blue channel
 				}
 				break;
 			case 'B':
 				for (let i = 0; i < data.length; i += 4) {
-					data[i] = 0;	 // Red channel
+					data[i] = 0;     // Red channel
 					data[i + 1] = 0; // Green channel
 				}
 				break;
@@ -86,7 +92,7 @@
 					data[i] = data[i + 1] = data[i + 2] = avg;
 				}
 				break;
-			case 'Anti-Transparency':
+			case 'Full Opaqueness':
 				for (let i = 3; i < data.length; i += 4) {
 					data[i] = 255;
 				}
