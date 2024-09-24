@@ -57,7 +57,7 @@
 	const applyEffectButton = document.getElementById('apply');
 	let width, height, prevDrawX, prevDrawY, mouseDown;
 	setTimeout(function() {
-		const e = canvas.getClientBoundingRect();
+		const e = canvas.getBoundingClientRect();
 		[width, height] = [e.left, e.top];
 	}, 100);
 	const params = [
