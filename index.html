@@ -31,8 +31,9 @@
 		<option>Limit Color Palette</option>
 		<option disabled style="color: red">Randomization</option>
 		<option>Noise</option>
-		<option disabled style="color: green">Complex Color Filters</option>
+		<option disabled style="color: green">Complex Effects</option>
 		<option>Replace Color With</option>
+		<option>Draw (Marker)</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
@@ -54,6 +55,11 @@
 	const effectSelect = document.getElementById('effect');
 	const currentEffect = document.getElementById('currenteffect');
 	const applyEffectButton = document.getElementById('apply');
+	let width, height, prevDrawX, prevDrawY, mouseDown;
+	setTimeout(function() {
+		const e = canvas.getClientBoundingRect();
+		[width, height] = [e.left, e.top];
+	}, 100);
 	const params = [
 		{
 			input: document.getElementById('param1'),
@@ -64,6 +70,33 @@
 			label: document.getElementById('labelparam2')
 		}
 	];
+	canvas.onmousedown = function(event) {
+		if (effectSelect.value === "Draw (Marker)") {
+			mouseDown = true;
+			ctx.beginPath();
+			ctx.moveTo(event.clientX - width, event.clientY - height);
+			ctx.lineTo(event.clientX - width, event.clientY - height);
+			ctx.stroke();
+			prevDrawX = event.clientX - width;
+			prevDrawY = event.clientY - height;
+		} else {
+			mouseDown = false;
+		}
+	}
+	canvas.onmouseup = function() {
+		mouseDown = false;
+	}
+	canvas.onmousemove = function(event) {
+		if (mouseMove && effectSelect.value === "Draw (Marker)") {
+			mouseDown = true;
+			ctx.beginPath();
+			ctx.moveTo(prevDrawX, prevDrawY);
+			ctx.lineTo(event.clientX - width, event.clientY - height);
+			ctx.stroke();
+			prevDrawX = event.clientX - width;
+			prevDrawY = event.clientY - height;
+		}
+	}
 	fileInput.addEventListener('change', function () {
 		const file = fileInput.files[0];
 		if (file) {
@@ -125,19 +158,27 @@
 			params[0].input.step = ""
 			params[0].label.style = ""
 			params[0].label.textContent = "Target Color"
+		} else if (effectSelect.value === "Draw (Marker)") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "1"
+			params[0].input.max = "4096"
+			params[0].input.step = "1"
+			params[0].label.style = ""
+			params[0].label.textContent = "Marker Width"
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
 			params[0].label.textContent = ""
 		}
-		if (effectSelect.value === "Replace Color With") {
+		if (effectSelect.value === "Replace Color With" || effectSelect.value === "Draw (Marker)") {
 			params[1].input.style = ""
 			params[1].input.type = "color"
 			params[1].input.min = ""
 			params[1].input.max = ""
 			params[1].input.step = ""
 			params[1].label.style = ""
-			params[1].label.textContent = "Color Replacement"
+			params[1].label.textContent = effectSelect.value === "Draw (Marker)" ? "Marker Color" : "Color Replacement"
 		} else {
 			params[1].input.style = "display: none"
 			params[1].label.style = "display: none"
@@ -156,6 +197,9 @@ function hexToRGB(hex_color) {
 		if (effect === "Restore Original Image") {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(imageElement, 0, 0);
+			return;
+		}
+		if (effect === "Draw (Marker)") {
 			return;
 		}
 		const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
