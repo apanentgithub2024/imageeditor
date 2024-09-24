@@ -73,6 +73,8 @@
 	canvas.onmousedown = function(event) {
 		if (effectSelect.value === "Draw (Marker)") {
 			mouseDown = true;
+			ctx.lineWidth = Number(param[0].input.value);
+			ctx.strokeStyle = param[1].input.value;
 			ctx.beginPath();
 			ctx.moveTo(event.clientX - width, event.clientY - height);
 			ctx.lineTo(event.clientX - width, event.clientY - height);
@@ -183,6 +185,9 @@
 			params[1].input.style = "display: none"
 			params[1].label.style = "display: none"
 			params[1].label.textContent = ""
+		}
+		if (effectSelect.value === "Draw (Marker)") {
+			
 		}
 	})
 function hexToRGB(hex_color) {
