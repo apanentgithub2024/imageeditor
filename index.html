@@ -1,6 +1,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<style id="fil"></style>
 </head>
 <body>
 <img id="image" style="display: none">
@@ -352,7 +353,7 @@ function hexToRGB(hex_color) {
 	});
 	toggleButton.addEventListener('click', function () {
 		isToggled = !isToggled;
-		document.body.setAttribute("style", isToggled ? `button, select, option {
+		document.getElementById("fil").textContent = isToggled ? `button, select, option {
 	background-color: darkgray;
 }
 h1, h2, h3, h4, h5, h6, p, a, label, s, b, i {
@@ -360,7 +361,7 @@ h1, h2, h3, h4, h5, h6, p, a, label, s, b, i {
 }
 body {
 	background-color: black;
-}`.replace(/\n/gs, " ") : "");
+}` : "";
 	});
 </script>
 </body>
