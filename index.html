@@ -352,7 +352,7 @@ function hexToRGB(hex_color) {
 	});
 	toggleButton.addEventListener('click', function () {
 		isToggled = !isToggled;
-		document.body.style = isToggled ? `button, select, option {
+		document.body.setAttribute("style", isToggled ? `button, select, option {
 	background-color: darkgray;
 }
 h1, h2, h3, h4, h5, h6, p, a, label, s, b, i {
@@ -360,7 +360,7 @@ h1, h2, h3, h4, h5, h6, p, a, label, s, b, i {
 }
 body {
 	background-color: black;
-}` : ""
+}`.replace(/\n/gs, " ") : "");
 	});
 </script>
 </body>
