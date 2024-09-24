@@ -31,6 +31,8 @@
 		<option>Limit Color Palette</option>
 		<option disabled style="color: red">Randomization</option>
 		<option>Noise</option>
+		<option disabled style="color: red">Resizing</option>
+		<option>Change Dimensions Of Bounds To</option>
 		<option disabled style="color: green">Complex Effects</option>
 		<option>Replace Color With</option>
 		<option>Draw (Marker)</option>
@@ -45,6 +47,8 @@
 	<input id="param2" style="display: none">
 	<br>
 	<button id="apply">Apply Effect</button>
+	<br>
+	<button id="toggle">Toggle Between Shades</button>
 </div>
 <script>
 	const fileInput = document.getElementById('file');
@@ -55,7 +59,8 @@
 	const effectSelect = document.getElementById('effect');
 	const currentEffect = document.getElementById('currenteffect');
 	const applyEffectButton = document.getElementById('apply');
-	let width, height, prevDrawX, prevDrawY, mouseDown;
+	const toggleButton = document.getElementById('toggle');
+	let width, height, prevDrawX, prevDrawY, mouseDown, imgWidth, imgHeight, isToggled;
 	setTimeout(function() {
 		const e = canvas.getBoundingClientRect();
 		[width, height] = [e.left, e.top];
@@ -76,11 +81,11 @@
 			ctx.lineWidth = Number(params[0].input.value);
 			ctx.strokeStyle = params[1].input.value;
 			ctx.beginPath();
-			ctx.moveTo(event.clientX - width, event.clientY - height);
-			ctx.lineTo(event.clientX - width, event.clientY - height);
+			ctx.moveTo((event.clientX + window.pageXOffset) - width, (event.clientY + window.pageYOffset) - height);
+			ctx.lineTo((event.clientX + window.pageXOffset) - width, (event.clientY + window.pageYOffset) - height);
 			ctx.stroke();
-			prevDrawX = event.clientX - width;
-			prevDrawY = event.clientY - height;
+			prevDrawX = (event.clientX + window.pageXOffset);
+			prevDrawY = (event.clientY + window.pageYOffset);
 		} else {
 			mouseDown = false;
 		}
@@ -93,10 +98,10 @@
 			mouseDown = true;
 			ctx.beginPath();
 			ctx.moveTo(prevDrawX, prevDrawY);
-			ctx.lineTo(event.clientX - width, event.clientY - height);
+			ctx.lineTo((event.clientX + window.pageXOffset) - width, (event.clientY + window.pageYOffset) - height);
 			ctx.stroke();
-			prevDrawX = event.clientX - width;
-			prevDrawY = event.clientY - height;
+			prevDrawX = (event.clientX + window.pageXOffset) - width;
+			prevDrawY = (event.clientY + window.pageYOffset) - height;
 		}
 	}
 	fileInput.addEventListener('change', function () {
@@ -111,6 +116,8 @@
 				img.onload = function () {
 					canvas.width = img.width;
 					canvas.height = img.height;
+					imgWidth = Number(img.width);
+					imgHeight = Number(img.height);
 					ctx.drawImage(img, 0, 0);
 				};
 				img.src = e.target.result;
@@ -168,6 +175,15 @@
 			params[0].input.step = "1"
 			params[0].label.style = ""
 			params[0].label.textContent = "Marker Width"
+		} else if (effectSelect.value === "Change Size To") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "1"
+			params[0].input.max = "16384"
+			params[0].input.step = "1"
+			params[0].label.style = ""
+			params[0].label.textContent = "Width in PX (Pixels)"
+			params[0].input.value = Number(canvas.width)
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
@@ -181,13 +197,19 @@
 			params[1].input.step = ""
 			params[1].label.style = ""
 			params[1].label.textContent = effectSelect.value === "Draw (Marker)" ? "Marker Color" : "Color Replacement"
+		} else if (effectSelect.value === "Change Size To") {
+			params[1].input.style = ""
+			params[1].input.type = "number"
+			params[1].input.min = "1"
+			params[1].input.max = "16384"
+			params[1].input.step = "1"
+			params[1].label.style = ""
+			params[1].label.textContent = "Height in PX (Pixels)"
+			params[1].input.value = Number(canvas.height)
 		} else {
 			params[1].input.style = "display: none"
 			params[1].label.style = "display: none"
 			params[1].label.textContent = ""
-		}
-		if (effectSelect.value === "Draw (Marker)") {
-			
 		}
 	})
 function hexToRGB(hex_color) {
@@ -200,6 +222,8 @@ function hexToRGB(hex_color) {
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
 		if (effect === "Restore Original Image") {
+			canvas.width = imgWidth;
+			canvas.height = imgHeight;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(imageElement, 0, 0);
 			return;
@@ -321,6 +345,18 @@ function hexToRGB(hex_color) {
 		}
 		ctx.putImageData(imgData, 0, 0);
 		currentEffect.textContent = `Current Effect: ${effect}`;
+	});
+	toggleButton.addEventListener('click', function () {
+		isToggled = !isToggled;
+		document.body.style = isToggled ? `button, select, option {
+	background-color: darkgray;
+}
+h1, h2, h3, h4, h5, h6, p, a, label, s, b, i {
+	color: white;
+}
+body {
+	background-color: black;
+}` : ""
 	});
 </script>
 </body>
