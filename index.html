@@ -175,7 +175,7 @@
 			params[0].input.step = "1"
 			params[0].label.style = ""
 			params[0].label.textContent = "Marker Width"
-		} else if (effectSelect.value === "Change Size To") {
+		} else if (effectSelect.value === "Change Dimensions Of Bounds To") {
 			params[0].input.style = ""
 			params[0].input.type = "number"
 			params[0].input.min = "1"
@@ -197,7 +197,7 @@
 			params[1].input.step = ""
 			params[1].label.style = ""
 			params[1].label.textContent = effectSelect.value === "Draw (Marker)" ? "Marker Color" : "Color Replacement"
-		} else if (effectSelect.value === "Change Size To") {
+		} else if (effectSelect.value === "Change Dimensions Of Bounds To") {
 			params[1].input.style = ""
 			params[1].input.type = "number"
 			params[1].input.min = "1"
@@ -323,6 +323,10 @@ function hexToRGB(hex_color) {
 					data[i] = data[i + 1] = data[i + 2] = data[i + 3];
 					data[i + 3] = (checked && data[i + 3] === 0) ? 0 : 255;
 				}
+				break;
+			case 'Change Dimensions Of Bounds To':
+				canvas.width = params[0].input.value;
+				canvas.height = params[1].input.value;
 				break;
 			case 'Replace Color With':
 				const target = hexToRGB(params[0].input.value)
