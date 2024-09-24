@@ -85,8 +85,8 @@
 			ctx.moveTo((event.clientX + window.pageXOffset) - width, (event.clientY + window.pageYOffset) - height);
 			ctx.lineTo((event.clientX + window.pageXOffset) - width, (event.clientY + window.pageYOffset) - height);
 			ctx.stroke();
-			prevDrawX = (event.clientX + window.pageXOffset);
-			prevDrawY = (event.clientY + window.pageYOffset);
+			prevDrawX = (event.clientX + window.pageXOffset) - width;
+			prevDrawY = (event.clientY + window.pageYOffset) - height;
 		} else {
 			mouseDown = false;
 		}
