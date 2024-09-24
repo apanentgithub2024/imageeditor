@@ -351,9 +351,7 @@ function hexToRGB(hex_color) {
 		ctx.putImageData(imgData, 0, 0);
 		currentEffect.textContent = `Current Effect: ${effect}`;
 	});
-	toggleButton.addEventListener('click', function () {
-		isToggled = !isToggled;
-		document.getElementById("fil").textContent = isToggled ? `button, select, option {
+	const darkCSS = `button, select, option {
 	background-color: darkgray;
 }
 h1, h2, h3, h4, h5, h6, p, a, label, s, b, i, input {
@@ -361,7 +359,15 @@ h1, h2, h3, h4, h5, h6, p, a, label, s, b, i, input {
 }
 body, input {
 	background-color: black;
-}` : "";
+}`
+	if (localStorage.getItem('isDarkMode') === "true") {
+		document.getElementById("fil").textContent = darkCSS
+		isToggled = true;
+	}
+	toggleButton.addEventListener('click', function () {
+		isToggled = !isToggled;
+		localStorage.setItem('isDarkMode', isToggled + "");
+		document.getElementById("fil").textContent = isToggled ? darkCSS : "";
 	});
 </script>
 </body>
