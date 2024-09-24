@@ -87,7 +87,7 @@
 		mouseDown = false;
 	}
 	canvas.onmousemove = function(event) {
-		if (mouseMove && effectSelect.value === "Draw (Marker)") {
+		if (mouseDown && effectSelect.value === "Draw (Marker)") {
 			mouseDown = true;
 			ctx.beginPath();
 			ctx.moveTo(prevDrawX, prevDrawY);
