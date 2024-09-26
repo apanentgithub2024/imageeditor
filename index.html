@@ -80,6 +80,7 @@
 		if (effectSelect.value === "Draw (Marker)") {
 			mouseDown = true;
 			ctx.lineWidth = Number(params[0].input.value);
+			ctx.lineCap = "round";
 			ctx.strokeStyle = params[1].input.value;
 			ctx.beginPath();
 			ctx.moveTo((event.clientX + window.pageXOffset) - width, (event.clientY + window.pageYOffset) - height);
