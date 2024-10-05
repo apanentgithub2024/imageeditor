@@ -37,6 +37,7 @@
 		<option disabled style="color: green">Complex Effects</option>
 		<option>Replace Color With</option>
 		<option>Draw (Marker)</option>
+		<option>Blend Leftwards</option>
 		<option>Blend Rightwards</option>
 	</select>
 	<br>
@@ -368,7 +369,7 @@ function interpolate(x, y, n) {
 					}
 				}
 				break;
-			case 'Blend Rightwards':
+			case 'Blend Leftwards':
 				const cache = data.length - 4
 				for (let i = 0; i < cache; i += 4) {
 					if (data[i + 3]) {
@@ -378,7 +379,17 @@ function interpolate(x, y, n) {
 						data[i + 3] = interpolate(data[i + 3], data[i + 7], 0.5)
 					}
 				}
-				break;
+				break
+			case 'Blend Rightwards':
+				for (let i = 4; i < data.length; i += 4) {
+					if (data[i + 3]) {
+						data[i] = interpolate(data[i], data[i - 4], 0.5)
+						data[i + 1] = interpolate(data[i + 1], data[i - 3], 0.5)
+						data[i + 2] = interpolate(data[i + 2], data[i - 2], 0.5)
+						data[i + 3] = interpolate(data[i + 3], data[i - 1], 0.5)
+					}
+				}
+				break
 		}
 		ctx.putImageData(imgData, 0, 0);
 		currentEffect.textContent = `Current Effect: ${effect}`;
