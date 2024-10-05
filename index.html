@@ -5,7 +5,7 @@
 </head>
 <body>
 <img id="image" style="display: none">
-<input id="file" type="file" accept="image/png, image/jpeg, image/jpg, image/gif, image/webp, .svg">
+<input id="file" type="file" accept="image/png, image/jpeg, image/jpg, image/gif, image/webp, text/svg">
 <div id="editor">
 	<canvas id="currentimage"></canvas>
 	<br>
@@ -37,6 +37,7 @@
 		<option disabled style="color: green">Complex Effects</option>
 		<option>Replace Color With</option>
 		<option>Draw (Marker)</option>
+		<option>Blend Rightwards</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
@@ -221,6 +222,9 @@ function hexToRGB(hex_color) {
 	const blue = parseInt(hex_color.slice(4, 6), 16)
 	return [red, green, blue]
 }
+function interpolate(x, y, n) {
+	return x + (y - x) * n
+}
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
 		if (effect === "Restore Original Image") {
@@ -256,7 +260,7 @@ function hexToRGB(hex_color) {
 				break;
 			case 'Grayscale (by Brightness)':
 				for (let i = 0; i < data.length; i += 4) {
-					if (data[i + 3] > 0) {
+					if (data[i + 3]) {
 						const brightness = (0.34 * data[i]) + (0.5 * data[i + 1]) + (0.16 * data[i + 2]);
 						data[i] = data[i + 1] = data[i + 2] = brightness;
 					}
@@ -264,7 +268,7 @@ function hexToRGB(hex_color) {
 				break;
 			case 'Grayscale (by Average)':
 				for (let i = 0; i < data.length; i += 4) {
-					if (data[i + 3] > 0) {
+					if (data[i + 3]) {
 						const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
 						data[i] = data[i + 1] = data[i + 2] = avg;
 					}
@@ -272,7 +276,7 @@ function hexToRGB(hex_color) {
 				break;
 			case 'Black and White':
 				for (let i = 0; i < data.length; i += 4) {
-					if (data[i + 3] > 0) {
+					if (data[i + 3]) {
 						const con = Math.floor(((data[i] + data[i + 1] + data[i + 2]) * 1.3) / 665) * 255;
 						data[i] = data[i + 1] = data[i + 2] = con;
 					}
@@ -281,7 +285,7 @@ function hexToRGB(hex_color) {
 			case 'Brighten (Multiplicative)':
 				const round2 = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
-					if (data[i + 3] > 0) {
+					if (data[i + 3]) {
 						data[i] = Math.max(0, Math.min(255, Math.round(data[i] * round2)));
 						data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] * round2)));
 						data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] * round2)));
@@ -291,7 +295,7 @@ function hexToRGB(hex_color) {
 			case 'Brighten (Additive)':
 				const round4 = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
-					if (data[i + 3] > 0) {
+					if (data[i + 3]) {
 						data[i] = Math.max(0, Math.min(255, Math.round(data[i] + round4)));
 						data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] + round4)));
 						data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] + round4)));
@@ -300,7 +304,7 @@ function hexToRGB(hex_color) {
 				break;
 			case 'Invert Color':
 				for (let i = 0; i < data.length; i += 4) {
-					if (data[i + 3] > 0) {
+					if (data[i + 3]) {
 						data[i] = 255 - data[i];
 						data[i + 1] = 255 - data[i + 1];
 						data[i + 2] = 255 - data[i + 2];
@@ -320,7 +324,7 @@ function hexToRGB(hex_color) {
 			case 'Limit Color Palette':
 				const round = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
-					if (data[i + 3] > 0) {
+					if (data[i + 3]) {
 						data[i] = Math.max(0, Math.min(255, Math.round(data[i] / round) * round));
 						data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] / round) * round));
 						data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] / round) * round));
@@ -357,10 +361,21 @@ function hexToRGB(hex_color) {
 			case 'Noise':
 				const round3 = Number(params[0].input.value) * 2
 				for (let i = 0; i < data.length; i += 4) {
-					if (data[i + 3] > 0) {
+					if (data[i + 3]) {
 						data[i] = Math.max(0, Math.min(255, data[i] + Math.round((Math.random() - 0.5) * round3)));
 						data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + Math.round((Math.random() - 0.5) * round3)));
 						data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + Math.round((Math.random() - 0.5) * round3)));
+					}
+				}
+				break;
+			case 'Blend Rightwards':
+				const cache = data.length - 4
+				for (let i = 0; i < cache; i += 4) {
+					if (data[i + 3] && data[i + 7]) {
+						data[i] = interpolate(data[i], data[i + 4], 0.5)
+						data[i + 1] = interpolate(data[i + 1], data[i + 5], 0.5)
+						data[i + 2] = interpolate(data[i + 2], data[i + 6], 0.5)
+						data[i + 3] = interpolate(data[i + 3], data[i + 7], 0.5)
 					}
 				}
 				break;
