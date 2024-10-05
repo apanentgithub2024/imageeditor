@@ -199,6 +199,15 @@
 			params[0].label.style = ""
 			params[0].label.textContent = "Blending Threshold"
 			params[0].input.value = 0.5
+		} else if (effectSelect.value === "Left Edge Detection" || effectSelect.value === "Right Edge Detection") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "0"
+			params[0].input.max = "1"
+			params[0].input.step = "0.00392156862745098"
+			params[0].label.style = ""
+			params[0].label.textContent = "Detection Sensitivity"
+			params[0].input.value = 0.1568
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
@@ -298,9 +307,9 @@ function interpolate(x, y, n) {
 				const round2 = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
 					if (data[i + 3]) {
-						data[i] = Math.max(0, Math.min(255, Math.round(data[i] * round2)))
-						data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] * round2)))
-						data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] * round2)))
+						data[i] = Math.round(data[i] * round2)
+						data[i + 1] = Math.round(data[i + 1] * round2)
+						data[i + 2] = Math.round(data[i + 2] * round2)
 					}
 				}
 				break;
@@ -308,9 +317,9 @@ function interpolate(x, y, n) {
 				const round4 = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
 					if (data[i + 3]) {
-						data[i] = Math.max(0, Math.min(255, Math.round(data[i] + round4)))
-						data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] + round4)))
-						data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] + round4)))
+						data[i] = Math.round(data[i] + round4)
+						data[i + 1] = Math.round(data[i + 1] + round4)
+						data[i + 2] = Math.round(data[i + 2] + round4)
 					}
 				}
 				break;
@@ -337,9 +346,9 @@ function interpolate(x, y, n) {
 				const round = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
 					if (data[i + 3]) {
-						data[i] = Math.max(0, Math.min(255, Math.round(data[i] / round) * round));
-						data[i + 1] = Math.max(0, Math.min(255, Math.round(data[i + 1] / round) * round));
-						data[i + 2] = Math.max(0, Math.min(255, Math.round(data[i + 2] / round) * round));
+						data[i] = Math.round(data[i] / round) * round
+						data[i + 1] = Math.round(data[i + 1] / round) * round
+						data[i + 2] = Math.round(data[i + 2] / round) * round
 					}
 				}
 				break;
@@ -374,9 +383,9 @@ function interpolate(x, y, n) {
 				const round3 = Number(params[0].input.value) * 2
 				for (let i = 0; i < data.length; i += 4) {
 					if (data[i + 3]) {
-						data[i] = Math.max(0, Math.min(255, data[i] + Math.round((Math.random() - 0.5) * round3)));
-						data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + Math.round((Math.random() - 0.5) * round3)));
-						data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + Math.round((Math.random() - 0.5) * round3)));
+						data[i] = data[i] + Math.round((Math.random() - 0.5) * round3);
+						data[i + 1] = data[i + 1] + Math.round((Math.random() - 0.5) * round3);
+						data[i + 2] = data[i + 2] + Math.round((Math.random() - 0.5) * round3);
 					}
 				}
 				break;
@@ -404,10 +413,10 @@ function interpolate(x, y, n) {
 				break
 			case 'Left Edge Detection':
 				let det, d
-				const cache2 = data.length - 4
+				const cache2 = data.length - 4, sen = Number(params[0].input.value) * 255
 				for (let i = 0; i < cache2; i += 4) {
 					if (data[i + 3] && !d) {
-						d = Math.abs((data[i] + data[i + 1] + data[i + 2]) - (data[i + 4] + data[i + 5] + data[i + 6])) > 40
+						d = Math.abs((data[i] + data[i + 1] + data[i + 2]) - (data[i + 4] + data[i + 5] + data[i + 6])) >= sen
 						data[i] = d ? 255 : data[i]
 						data[i + 1] = d ? 255 : data[i + 1]
 						data[i + 2] = d ? 255 : data[i + 2]
@@ -421,9 +430,10 @@ function interpolate(x, y, n) {
 				break
 			case 'Right Edge Detection':
 				let det2, d2
+				const sen2 = Number(params[0].input.value) * 255
 				for (let i = 4; i < data.length; i += 4) {
 					if (data[i + 3] && !d2) {
-						d2 = Math.abs((data[i] + data[i + 1] + data[i + 2]) - (data[i - 4] + data[i - 3] + data[i - 2])) > 40
+						d2 = Math.abs((data[i] + data[i + 1] + data[i + 2]) - (data[i - 4] + data[i - 3] + data[i - 2])) >= sen2
 						data[i] = d2 ? 255 : data[i]
 						data[i + 1] = d2 ? 255 : data[i + 1]
 						data[i + 2] = d2 ? 255 : data[i + 2]
