@@ -413,7 +413,7 @@ function interpolate(x, y, n) {
 				}
 				break
 			case 'Blend Rightwards':
-				const th2 = Number(params[0].input.value)
+				const th2 = 1 - Number(params[0].input.value)
 				for (let i = 4; i < data.length; i += 4) {
 					if (data[i - 1]) {
 						data[i] = interpolate(data[i - 4], data[i], th2)
@@ -483,6 +483,13 @@ function interpolate(x, y, n) {
 					data[i] = Math.tanh(data[i] / ca2) * 255
 					data[i + 1] = Math.tanh(data[i + 2] / ca2) * 255
 					data[i + 2] = Math.tanh(data[i + 2] / ca2) * 255
+				}
+				break
+			case 'Chromatic':
+				const cha = data.length - 4
+				for (let i = 4; i < cha; i += 4) {
+					data[i] = data[i - 4]
+					data[i + 2] = data[i + 4]
 				}
 				break
 		}
