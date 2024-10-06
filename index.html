@@ -25,6 +25,7 @@
 		<option>Brighten (Additive)</option>
 		<option>Invert Color</option>
 		<option>Shift RGB Channels Left</option>
+		<option>Tan (Hyperbolic) Darkness</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>All-Opaque</option>
 		<option>Opacity Visualization</option>
@@ -473,6 +474,12 @@ function interpolate(x, y, n) {
 							times--
 						}
 					}
+				}
+			case 'Tan (Hyperbolic) Darkness':
+				for (let i = 0; i < data.length; i += 4) {
+					data[i] = Math.tanh(data[i]) * 255
+					data[i + 1] = Math.tanh(data[i + 2]) * 255
+					data[i + 2] = Math.tanh(data[i + 2]) * 255
 				}
 		}
 		ctx.putImageData(imgData, 0, 0);
