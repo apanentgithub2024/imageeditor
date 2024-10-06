@@ -476,7 +476,7 @@ function interpolate(x, y, n) {
 					}
 				}
 			case 'Tan (Hyperbolic) Darkness':
-				const ca2 = Math.PI * 30
+				const ca2 = Math.PI * 60
 				for (let i = 0; i < data.length; i += 4) {
 					data[i] = Math.tanh(data[i] / ca2) * 255
 					data[i + 1] = Math.tanh(data[i + 2] / ca2) * 255
