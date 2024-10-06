@@ -366,19 +366,19 @@ function interpolate(x, y, n) {
 			case 'All-Opaque':
 				const checked2 = !params[0].input.checked
 				for (let i = 3; i < data.length; i += 4) {
-					data[i] = (checked2 && data[i] === 0) ? 0 : 255;
+					data[i] = (checked2 && data[i] === 0) ? 0 : 255
 				}
 				break;
 			case 'Opacity Visualization':
 				const checked = !params[0].input.checked
 				for (let i = 0; i < data.length; i += 4) {
-					data[i] = data[i + 1] = data[i + 2] = data[i + 3];
-					data[i + 3] = (checked && data[i + 3] === 0) ? 0 : 255;
+					data[i] = data[i + 1] = data[i + 2] = data[i + 3]
+					data[i + 3] = (checked && data[i + 3] === 0) ? 0 : 255
 				}
 				break;
 			case 'Change Dimensions Of Bounds To':
-				canvas.width = params[0].input.value;
-				canvas.height = params[1].input.value;
+				canvas.width = params[0].input.value
+				canvas.height = params[1].input.value
 				break;
 			case 'Replace Color With':
 				const target = hexToRGB(params[0].input.value)
