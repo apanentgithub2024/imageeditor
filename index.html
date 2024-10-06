@@ -209,6 +209,15 @@
 			params[0].label.style = ""
 			params[0].label.textContent = "Detection Sensitivity"
 			params[0].input.value = 0.1568
+		} else if (effectSelect.value === "Scatter") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "1"
+			params[0].input.max = "4096"
+			params[0].input.step = "1"
+			params[0].label.style = ""
+			params[0].label.textContent = "Spread Threshold"
+			params[0].input.value = 1
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
@@ -448,9 +457,10 @@ function interpolate(x, y, n) {
 				break
 			case 'Scatter':
 				let times = 0, pla = true, de = []
+				const thr = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
 					if (pla) {
-						times = Math.floor(Math.random() * 3)
+						times = Math.floor(Math.random() * thr)
 						pla = times === 0
 						de = [data[i], data[i + 1], data[i + 2]]
 					} else {
