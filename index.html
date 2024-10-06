@@ -376,7 +376,7 @@ function interpolate(x, y, n) {
 				for (let i = 0; i < data.length; i += 4) {
 					const r = data[i], g = data[i + 1], b = data[i + 2]
 					if (r === target[0] && g === target[1] && b === target[2]) {
-						[data[i], data[i + 1], data[i + 2]] = [replac[0], replac[1], replac[2]]
+						[data[i], data[i + 1], data[i + 2]] = replac
 					}
 				}
 				break;
@@ -447,18 +447,18 @@ function interpolate(x, y, n) {
 				}
 				break
 			case 'Scatter':
-				let times = 0, pla = true, d = []
+				let times = 0, pla = true, de = []
 				for (let i = 0; i < data.length; i += 4) {
 					if (pla) {
 						times = Math.floor(Math.random() * 8)
 						pla = times === 0
 						if (!pla) {
-							d = [data[i], data[i + 1], data[i + 2]]
+							de = [data[i], data[i + 1], data[i + 2]]
 						}
 					} else {
 						if (times === 0) {
 							pla = true
-							[data[i], data[i + 1], data[i + 2]] = d
+							[data[i], data[i + 1], data[i + 2]] = de
 						} else {
 							times--
 						}
