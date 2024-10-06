@@ -26,7 +26,7 @@
 		<option>Invert Color</option>
 		<option>Shift RGB Channels Left</option>
 		<option>Tan (Hyperbolic) Darkness</option>
-		<option>Chromatic</option>
+		<option>Saturation</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>All-Opaque</option>
 		<option>Opacity Visualization</option>
@@ -486,13 +486,12 @@ function interpolate(x, y, n) {
 					data[i + 2] = Math.tanh(data[i + 2] / ca2) * 255
 				}
 				break
-			case 'Chromatic':
-				const cha = data.length - 4
-				for (let i = 4; i < cha; i += 4) {
-					data[i] = data[i + 4]
-					data[i + 2] = data[i - 2]
+			case 'Saturation':
+				for (let i = 0; i < data.length; i += 4) {
+					data[i] = interpolation(0, 255, data[i] / 255)
+					data[i + 1] = interpolation(0, 255, data[i + 1] / 255)
+					data[i + 2] = interpolation(0, 255, data[i + 2] / 255)
 				}
-				break
 		}
 		ctx.putImageData(imgData, 0, 0);
 		currentEffect.textContent = `Current Effect: ${effect}`;
