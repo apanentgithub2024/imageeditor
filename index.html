@@ -452,13 +452,13 @@ function interpolate(x, y, n) {
 					if (pla) {
 						times = Math.floor(Math.random() * 3)
 						pla = times === 0
-						if (!pla) {
-							de = [data[i], data[i + 1], data[i + 2]]
-						}
+						de = [data[i], data[i + 1], data[i + 2]]
 					} else {
 						if (times === 0) {
 							pla = true
-							[data[i], data[i + 1], data[i + 2]] = de
+							data[i] = de[0]
+							data[i + 1] = de[1]
+							data[i + 2] = de[2]
 						} else {
 							times--
 						}
