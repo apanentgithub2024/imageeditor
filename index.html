@@ -488,9 +488,9 @@ function interpolate(x, y, n) {
 				break
 			case 'Saturation':
 				for (let i = 0; i < data.length; i += 4) {
-					data[i] = interpolate(0, 255, data[i] * 1.2 / 255)
-					data[i + 1] = interpolate(0, 255, data[i + 1] * 1.2 / 255)
-					data[i + 2] = interpolate(0, 255, data[i + 2] * 1.2 / 255)
+					data[i] = interpolate(0, 255, Math.pow(data[i] / 255, 1.5))
+					data[i + 1] = interpolate(0, 255, Math.pow(data[i + 1] / 255, 1.5))
+					data[i + 2] = interpolate(0, 255, Math.pow(data[i + 2] / 255, 1.5))
 				}
 		}
 		ctx.putImageData(imgData, 0, 0);
