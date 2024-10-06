@@ -41,6 +41,7 @@
 		<option>Blend Rightwards</option>
 		<option>Left Edge Detection</option>
 		<option>Right Edge Detection</option>
+		<option>Scatter</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
@@ -445,6 +446,24 @@ function interpolate(x, y, n) {
 					}
 				}
 				break
+			case 'Scatter':
+				let times = 0, pla = true, d = []
+				for (let i = 0; i < data.length; i += 4) {
+					if (pla) {
+						times = Math.floor(Math.random() * 8)
+						pla = times === 0
+						if (!pla) {
+							d = [data[i], data[i + 1], data[i + 2]]
+						}
+					} else {
+						if (times === 0) {
+							pla = true
+							[data[i], data[i + 1], data[i + 2]] = d
+						} else {
+							times--
+						}
+					}
+				}
 		}
 		ctx.putImageData(imgData, 0, 0);
 		currentEffect.textContent = `Current Effect: ${effect}`;
