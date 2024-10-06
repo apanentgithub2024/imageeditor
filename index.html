@@ -450,7 +450,7 @@ function interpolate(x, y, n) {
 				let times = 0, pla = true, de = []
 				for (let i = 0; i < data.length; i += 4) {
 					if (pla) {
-						times = Math.floor(Math.random() * 8)
+						times = Math.floor(Math.random() * 3)
 						pla = times === 0
 						if (!pla) {
 							de = [data[i], data[i + 1], data[i + 2]]
