@@ -26,7 +26,7 @@
 		<option>Invert Color</option>
 		<option>Shift RGB Channels Left</option>
 		<option>Tan (Hyperbolic) Darkness</option>
-		<option>Saturation</option>
+		<option>Contrast</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>All-Opaque</option>
 		<option>Opacity Visualization</option>
@@ -220,6 +220,15 @@
 			params[0].label.style = ""
 			params[0].label.textContent = "Spread Threshold"
 			params[0].input.value = 1
+		} else if (effectSelect.value === "Contrast") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "0"
+			params[0].input.max = "10"
+			params[0].input.step = "0.02"
+			params[0].label.style = ""
+			params[0].label.textContent = "Contrast Level"
+			params[0].input.value = 0.5
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
@@ -486,11 +495,12 @@ function interpolate(x, y, n) {
 					data[i + 2] = Math.tanh(data[i + 2] / ca2) * 255
 				}
 				break
-			case 'Saturation':
+			case 'Contrast':
+				const contr = Number(params[0].input.value) + 1
 				for (let i = 0; i < data.length; i += 4) {
-					data[i] = interpolate(0, 255, Math.pow(data[i] / 255, 1.5))
-					data[i + 1] = interpolate(0, 255, Math.pow(data[i + 1] / 255, 1.5))
-					data[i + 2] = interpolate(0, 255, Math.pow(data[i + 2] / 255, 1.5))
+					data[i] = interpolate(0, 255, Math.pow(data[i] / 255, contr))
+					data[i + 1] = interpolate(0, 255, Math.pow(data[i + 1] / 255, contr))
+					data[i + 2] = interpolate(0, 255, Math.pow(data[i + 2] / 255, contr))
 				}
 		}
 		ctx.putImageData(imgData, 0, 0);
