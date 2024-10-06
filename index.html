@@ -475,6 +475,7 @@ function interpolate(x, y, n) {
 						}
 					}
 				}
+				break
 			case 'Tan (Hyperbolic) Darkness':
 				const ca2 = Math.PI * 120
 				for (let i = 0; i < data.length; i += 4) {
@@ -482,6 +483,7 @@ function interpolate(x, y, n) {
 					data[i + 1] = Math.tanh(data[i + 2] / ca2) * 255
 					data[i + 2] = Math.tanh(data[i + 2] / ca2) * 255
 				}
+				break
 		}
 		ctx.putImageData(imgData, 0, 0);
 		currentEffect.textContent = `Current Effect: ${effect}`;
