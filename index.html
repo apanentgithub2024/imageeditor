@@ -413,12 +413,12 @@ function interpolate(x, y, n) {
 				break
 			case 'Blend Rightwards':
 				const th2 = Number(params[0].input.value)
-				for (let i = data.length - 8; i !== 0; i -= 4) {
+				for (let i = data.length - 8; i > -1; i -= 4) {
 					if (data[i + 3]) {
-						data[i] = interpolate(data[i], data[i + 4], th)
-						data[i + 1] = interpolate(data[i + 1], data[i + 5], th)
-						data[i + 2] = interpolate(data[i + 2], data[i + 6], th)
-						data[i + 3] = interpolate(data[i + 3], data[i + 7], th)
+						data[i] = interpolate(data[i], data[i - 4], th2)
+						data[i + 1] = interpolate(data[i + 1], data[i + 5], th2)
+						data[i + 2] = interpolate(data[i + 2], data[i + 6], th2)
+						data[i + 3] = interpolate(data[i + 3], data[i + 7], th2)
 					}
 				}
 				break
