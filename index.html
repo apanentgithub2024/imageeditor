@@ -516,7 +516,7 @@ function interpolate(x, y, n) {
 				const pixel = Number(params[0].input.value)
 				const p = 4 * pixel
 				for (let i = 0; i < data.length; i++) {
-					data[i] = data[Math.floor(i / p)]
+					data[i] = data[Math.floor(i / p) + (i % 4)]
 				}
 		}
 		ctx.putImageData(imgData, 0, 0);
