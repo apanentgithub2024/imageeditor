@@ -27,6 +27,7 @@
 		<option>Shift RGB Channels Left</option>
 		<option>Tan (Hyperbolic) Darkness</option>
 		<option>Contrast</option>
+		<option>Erratic Sin Color</option>
 		<option disabled style="color: darkred">Opacity Filters</option>
 		<option>All-Opaque</option>
 		<option>Opacity Visualization</option>
@@ -277,6 +278,7 @@ function hexToRGB(hex_color) {
 function interpolate(x, y, n) {
 	return x + (y - x) * n
 }
+	let erraticSin
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
 		if (effect === "Restore Original Image") {
@@ -518,6 +520,16 @@ function interpolate(x, y, n) {
 				const p = 4 * pixel, old = Uint8ClampedArray.from(data)
 				for (let i = 0; i < data.length; i++) {
 					data[i] = old[Math.floor(i / p) * p + (i % 4)]
+				}
+				break
+			case 'Erratic Sin Color':
+				if (erraticSin || confirm("WARNING: Applying this effect on images will give it a very epileptic effect! If you are sensitive to rainbow colors, then you are avised to not use this effect! Press OK if you have read this, and you aren't sensitive to rainbow colors, and the effect is applied. Press Cancel if you ARE sensitive to rainbow colors, and the effect won't be applied.")) {
+					erraticSin = true
+					for (let i = 0; i < data.length; i += 4) {
+						data[i] = Math.round((Math.sin(data[i]) + 1) * 122.5)
+						data[i + 1] = Math.round((Math.sin(data[i + 1]) + 1) * 122.5)
+						data[i + 2] = Math.round((Math.sin(data[i + 2]) + 1) * 122.5)
+					}
 				}
 				break
 		}
