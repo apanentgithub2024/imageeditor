@@ -32,6 +32,7 @@
 		<option>Opacity Visualization</option>
 		<option disabled style="color: red">Compression</option>
 		<option>Limit Color Palette</option>
+		<option>Pixelate</option>
 		<option disabled style="color: red">Randomization</option>
 		<option>Noise</option>
 		<option disabled style="color: red">Resizing</option>
@@ -229,6 +230,15 @@
 			params[0].label.style = ""
 			params[0].label.textContent = "Contrast Level"
 			params[0].input.value = 0.5
+		} else if (effectSelect.value === "Pixelate") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "2"
+			params[0].input.max = "16384"
+			params[0].input.step = "0.02"
+			params[0].label.style = ""
+			params[0].label.textContent = "Pixels Per Step"
+			params[0].input.value = 5
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
@@ -501,6 +511,12 @@ function interpolate(x, y, n) {
 					data[i] = interpolate(0, 255, Math.pow(data[i] / 255, contr))
 					data[i + 1] = interpolate(0, 255, Math.pow(data[i + 1] / 255, contr))
 					data[i + 2] = interpolate(0, 255, Math.pow(data[i + 2] / 255, contr))
+				}
+			case 'Pixelate':
+				const pixel = Number(params[0].input.value)
+				const p = 4 * pixel
+				for (let i = 0; i < data.length; i++) {
+					data[i] = data[Math.floor(i / p)]
 				}
 		}
 		ctx.putImageData(imgData, 0, 0);
