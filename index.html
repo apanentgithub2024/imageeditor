@@ -512,12 +512,14 @@ function interpolate(x, y, n) {
 					data[i + 1] = interpolate(0, 255, Math.pow(data[i + 1] / 255, contr))
 					data[i + 2] = interpolate(0, 255, Math.pow(data[i + 2] / 255, contr))
 				}
+				break
 			case 'Pixelate':
 				const pixel = Number(params[0].input.value)
 				const p = 4 * pixel, old = Uint8ClampedArray.from(data)
 				for (let i = 0; i < data.length; i++) {
 					data[i] = old[Math.floor(i / p) * p + (i % 4)]
 				}
+				break
 		}
 		ctx.putImageData(imgData, 0, 0);
 		currentEffect.textContent = `Current Effect: ${effect}`;
