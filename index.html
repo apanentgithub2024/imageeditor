@@ -514,9 +514,9 @@ function interpolate(x, y, n) {
 				}
 			case 'Pixelate':
 				const pixel = Number(params[0].input.value)
-				const p = 4 * pixel
+				const p = 4 * pixel, old = Uint8ClampedArray.from(data)
 				for (let i = 0; i < data.length; i++) {
-					data[i] = data[Math.floor(i / p) + (i % 4)]
+					data[i] = old[Math.floor(i / p) + (i % 4)]
 				}
 		}
 		ctx.putImageData(imgData, 0, 0);
