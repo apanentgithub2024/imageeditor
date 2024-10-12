@@ -47,6 +47,7 @@
 		<option>Left Edge Detection</option>
 		<option>Right Edge Detection</option>
 		<option>Scatter</option>
+		<option>Swap Pixels</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
@@ -104,7 +105,7 @@
 			ctx.lineCap = "round";
 			ctx.strokeStyle = params[1].input.value;
 			ctx.beginPath();
-			for (let i = 0; i < 10; i++) {
+			for (let i = 0; i < 40; i++) {
 				const w = (event.clientX + window.pageXOffset) - width, h = (event.clientY + window.pageYOffset) - height
 				const e = w + (Math.random() - 0.5) * 40, e2 = h + (Math.random() - 0.5) * 40
 				ctx.moveTo(e, e2)
@@ -130,7 +131,7 @@
 				prevDrawY = (event.clientY + window.pageYOffset) - height;
 			} else {
 				ctx.beginPath();
-				for (let i = 0; i < 10; i++) {
+				for (let i = 0; i < 40; i++) {
 					const w = (event.clientX + window.pageXOffset) - width, h = (event.clientY + window.pageYOffset) - height
 					const e = w + (Math.random() - 0.5) * 40, e2 = h + (Math.random() - 0.5) * 40
 					ctx.moveTo(e, e2)
@@ -261,9 +262,18 @@
 			params[0].input.type = "number"
 			params[0].input.min = "2"
 			params[0].input.max = "16384"
-			params[0].input.step = "0.02"
+			params[0].input.step = "1"
 			params[0].label.style = ""
 			params[0].label.textContent = "Pixels Per Step"
+			params[0].input.value = 5
+		} else if (effectSelect.value === "Swap Pixels") {
+			params[0].input.style = ""
+			params[0].input.type = "number"
+			params[0].input.min = "0"
+			params[0].input.max = "100"
+			params[0].input.step = "0.001"
+			params[0].label.style = ""
+			params[0].label.textContent = "Chance Of Swapping (Percentage)"
 			params[0].input.value = 5
 		} else {
 			params[0].input.style = "display: none"
@@ -523,6 +533,23 @@ function interpolate(x, y, n) {
 						}
 					}
 				}
+				for (let i = data.length - 3; i >= 0; i -= 4) {
+					if (pla) {
+						times = Math.floor(Math.random() * thr)
+						pla = times === 0
+						de = [data[i], data[i + 1], data[i + 2], data[i + 3]]
+					} else {
+						if (times === 0) {
+							pla = true
+							data[i] = de[0]
+							data[i + 1] = de[1]
+							data[i + 2] = de[2]
+							data[i + 3] = de[3]
+						} else {
+							times--
+						}
+					}
+				}
 				break
 			case 'Tan (Hyperbolic) Darkness':
 				const ca2 = Math.PI * 120
@@ -554,6 +581,40 @@ function interpolate(x, y, n) {
 						data[i] = Math.round((Math.sin(data[i]) + 1) * 122.5)
 						data[i + 1] = Math.round((Math.sin(data[i + 1]) + 1) * 122.5)
 						data[i + 2] = Math.round((Math.sin(data[i + 2]) + 1) * 122.5)
+					}
+				}
+				break
+			case 'Swap Pixels':
+				const chnce = Number(params[0].input.value) / 100
+				if (chnce === 0) return
+				let ind, tempee
+				if (chnce === 1) {
+					for (let i = 0; i < data.length; i += 4) {
+						ind = Math.floor((Math.random() * data.length) / 4) * 4
+						tempee = [data[ind], data[ind + 1], data[ind + 2], data[ind + 3]]
+						data[ind] = data[i]
+						data[ind + 1] = data[i + 1]
+						data[ind + 2] = data[i + 2]
+						data[ind + 3] = data[i + 3]
+						data[i] = tempee[0]
+						data[i + 1] = tempee[1]
+						data[i + 2] = tempee[2]
+						data[i + 3] = tempee[3]
+					}
+					return
+				}
+				for (let i = 0; i < data.length; i += 4) {
+					if (Math.random() < chnce) {
+						ind = Math.floor((Math.random() * data.length) / 4) * 4
+						tempee = [data[ind], data[ind + 1], data[ind + 2], data[ind + 3]]
+						data[ind] = data[i]
+						data[ind + 1] = data[i + 1]
+						data[ind + 2] = data[i + 2]
+						data[ind + 3] = data[i + 3]
+						data[i] = tempee[0]
+						data[i + 1] = tempee[1]
+						data[i + 2] = tempee[2]
+						data[i + 3] = tempee[3]
 					}
 				}
 				break
