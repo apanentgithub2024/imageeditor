@@ -36,6 +36,9 @@
 		<option>Pixelate</option>
 		<option disabled style="color: red">Randomization</option>
 		<option>Noise</option>
+		<option disabled style="color: red">Rotation</option>
+		<option>Flip Horizontally</option>
+		<option>Flip Vertically</option>
 		<option disabled style="color: red">Resizing</option>
 		<option>Change Dimensions Of Bounds To</option>
 		<option>Change Dimensions Of Bounds And Dislocate Columns</option>
@@ -634,6 +637,22 @@ function interpolate(x, y, n) {
 					data[i] = interpolate(data2[0], data[i + 1], bleeeend)
 					data[i + 1] = interpolate(data2[1], data[i + 2], bleeeend)
 					data[i + 2] = interpolate(data2[2], data[i], bleeeend)
+				}
+				break
+			case 'Flip Vertically':
+				const dataa = Uint8ClampedArray.from(data)
+				for (let i = 0; i < imgData.width * 4; i += 4) {
+					for (let j = i; j < data.length; j += imgData.width * 4) {
+						data[i] = dataa[i + (imgData.width * imgData.height * 4) - j]
+					}
+				}
+				break
+			case 'Flip Horizontally':
+				const dataa2 = Uint8ClampedArray.from(data)
+				for (let i = 0; i < imgData.width * 4; i += 4) {
+					for (let j = 0; i < data.length; j += imgData.width * 4) {
+						data[i] = dataa2[i + imgData.width - j]
+					}
 				}
 				break
 		}
