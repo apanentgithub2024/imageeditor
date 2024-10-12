@@ -5,7 +5,8 @@
 </head>
 <body>
 <img id="image" style="display: none">
-<input id="file" type="file" accept="image/png, image/jpeg, image/jpg, image/gif, image/webp, text/svg">
+<input id="file" type="file" accept=".png, .jpeg, .jpg, .gif, .webp, .svg, .jfif, .cur">
+<input id="secondfile" type="file" accept=".png, .jpeg, .jpg, .gif, .webp, .svg, .jfif, .cur">
 <div id="editor">
 	<canvas id="currentimage"></canvas>
 	<br>
@@ -49,6 +50,7 @@
 		<option>Right Edge Detection</option>
 		<option>Scatter</option>
 		<option>Swap Pixels</option>
+		<option>Blend RGB Channels Left</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
@@ -222,14 +224,14 @@
 			params[0].label.style = ""
 			params[0].label.textContent = "Width in PX (Pixels)"
 			params[0].input.value = Number(canvas.width)
-		} else if (effectSelect.value === "Blend Leftwards" || effectSelect.value === "Blend Rightwards") {
+		} else if (effectSelect.value === "Blend Leftwards" || effectSelect.value === "Blend Rightwards" || effectSelect.value === "Blend RGB Channels Left") {
 			params[0].input.style = ""
 			params[0].input.type = "number"
 			params[0].input.min = "-1"
 			params[0].input.max = "1"
 			params[0].input.step = "0.01"
 			params[0].label.style = ""
-			params[0].label.textContent = "Blending Threshold"
+			params[0].label.textContent = effectSelect.value === "Blend RGB Channels Left" ? "Evening Scale" : "Blending Threshold"
 			params[0].input.value = 0.5
 		} else if (effectSelect.value === "Left Edge Detection" || effectSelect.value === "Right Edge Detection") {
 			params[0].input.style = ""
@@ -624,6 +626,15 @@ function interpolate(x, y, n) {
 							data[i + 3] = tempee[3]
 						}
 					}
+				}
+				break
+			case 'Even Color Channels':
+				const bleeeend = Number(params[0].input.value)
+				for (let i = 0; i < data.length; i += 4) {
+					const data2 = [data[i], data[i + 1], data[i + 2]]
+					data[i] = interpolate(data[i], data2[i + 1], bleeeend)
+					data[i + 1] = interpolate(data2[i + 1], data[i + 2], bleeeend)
+					data[i + 2] = interpolate(data[i + 2], data2[i], bleeeend)
 				}
 				break
 		}
