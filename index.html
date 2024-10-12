@@ -632,9 +632,9 @@ function interpolate(x, y, n) {
 				const bleeeend = Number(params[0].input.value)
 				for (let i = 0; i < data.length; i += 4) {
 					const data2 = [data[i], data[i + 1], data[i + 2]]
-					data[i] = interpolate(data[i], data2[i + 1], bleeeend)
-					data[i + 1] = interpolate(data2[i + 1], data[i + 2], bleeeend)
-					data[i + 2] = interpolate(data[i + 2], data2[i], bleeeend)
+					data[i] = interpolate(data2[0], data[i + 1], bleeeend)
+					data[i + 1] = interpolate(data2[1], data[i + 2], bleeeend)
+					data[i + 2] = interpolate(data2[2], data[i], bleeeend)
 				}
 				break
 		}
