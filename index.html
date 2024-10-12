@@ -442,7 +442,7 @@ function interpolate(x, y, n) {
 				canvas.width = params[0].input.value
 				canvas.height = params[1].input.value
 				const deeea = new Uint8ClampedArray(+params[0].input.value * +params[1].input.value * 4)
-				deeea.set(data)
+				deeea.set(data.slice(0, Math.min(+params[0].input.value * +params[1].input.value * 4, data.length)))
 				imgData = new ImageData(deeea, +canvas.width, +canvas.height)
 				break;
 			case 'Replace Color With':
