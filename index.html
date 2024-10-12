@@ -348,6 +348,10 @@
 			params[2].input.checked = false
 			params[2].label.textContent = "Wrap Values"
 			params[2].label.style = ""
+			params[0].input.style = "display: none"
+			params[0].label.style = "display: none"
+			params[1].input.style = "display: none"
+			params[1].label.style = "display: none"
 		} else {
 			blendOpt.style = "display: none"
 			fileInput2.style = "display: none"
@@ -714,8 +718,8 @@
 			case 'Blend Another Image':
 				ctx.clearRect(0, 0, Number(canvas.width), Number(canvas.height))
 				ctx.drawImage(blendImage, 0, 0)
-				let data2 = ctx.getImageData(0, 0, Number(canvas.width), Number(canvas.height))
-				data2 = params[2].input.checked ? Uint8Array.from(data2) : data2
+				let imgData2 = ctx.getImageData(0, 0, Number(canvas.width), Number(canvas.height))
+				let data2 = params[2].input.checked ? Uint8Array.from(imgData2.data) : imgData2.data
 				if (blendOpt.value === "Additive") {
 					for (let i = 0; i < data.length; i++) {
 						data[i] += data2[i]
@@ -739,7 +743,7 @@
 						data[i] = interpolate(data[i], data2[i], 0.5)
 					}
 				}
-				data = params[2].input.checked ? Uint8ClampedArray.from(data) : data
+				data2 = params[2].input.checked ? Uint8ClampedArray.from(data2) : data2
 				break
 		}
 		ctx.putImageData(imgData, 0, 0)
