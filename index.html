@@ -640,6 +640,14 @@ function interpolate(x, y, n) {
 				}
 				break
 			case 'Flip Vertically':
+				const a = new Uint8ClampedArray(data.length), rowSize = 4 * imgData.width
+				for (let y = 0; y < height; y++) {
+					const sourceRowIndex = (height - 1 - y) * rowSize, destRowIndex = y * rowSize;
+					for (let x = 0; x < rowSize; x++) {
+						a[destRowIndex + x] = data[sourceRowIndex + x];
+					}
+				}
+				data.set(a)
 				break
 			case 'Flip Horizontally':
 				const newData = new Uint8ClampedArray(data.length), casa = imgData.width * 4
