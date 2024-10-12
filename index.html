@@ -719,28 +719,54 @@
 				ctx.clearRect(0, 0, Number(canvas.width), Number(canvas.height))
 				ctx.drawImage(blendImage, 0, 0)
 				const imgData2 = ctx.getImageData(0, 0, Number(canvas.width), Number(canvas.height))
-				let data2 = params[2].input.checked ? Uint8Array.from(imgData2.data) : imgData2.data
-				if (blendOpt.value === "Additive") {
-					for (let i = 0; i < data.length; i++) {
-						data[i] += data2[i]
+				const data2 = imgData2.data
+				if (params[2].input.checked) {
+					if (blendOpt.value === "Additive") {
+						for (let i = 0; i < data.length; i++) {
+							data[i] = (data[i] + data2[i]) % 256
+						}
+					} else if (blendOpt.value === "Subtractive") {
+						for (let i = 0; i < data.length; i++) {
+							data[i] = (data[i] - data2[i]) % 256
+						}
+					} else if (blendOpt.value === "Multiplicative") {
+						for (let i = 0; i < data.length; i++) {
+							data[i] = (data[i] * (data2[i] / 122.5)) % 256
+						}
+					} else if (blendOpt.value === "Dividive") {
+						let output
+						for (let i = 0; i < data.length; i++) {
+							output = data[i] / (data2[i] / 122.5)
+							data[i] = (output === Infinity ? 255 : output !== output ? 0 : output) % 256
+						}
+					} else if (blendOpt.value === "Traverse") {
+						for (let i = 0; i < data.length; i++) {
+							data[i] = interpolate(data[i], data2[i], 0.5)
+						}
 					}
-				} else if (blendOpt.value === "Subtractive") {
-					for (let i = 0; i < data.length; i++) {
-						data[i] -= data2[i]
-					}
-				} else if (blendOpt.value === "Multiplicative") {
-					for (let i = 0; i < data.length; i++) {
-						data[i] *= data2[i] / 122.5
-					}
-				} else if (blendOpt.value === "Dividive") {
-					let output
-					for (let i = 0; i < data.length; i++) {
-						output = data[i] / (data2[i] / 122.5)
-						data[i] = output === Infinity ? 255 : output !== output ? 0 : output
-					}
-				} else if (blendOpt.value === "Traverse") {
-					for (let i = 0; i < data.length; i++) {
-						data[i] = interpolate(data[i], data2[i], 0.5)
+				} else {
+					if (blendOpt.value === "Additive") {
+						for (let i = 0; i < data.length; i++) {
+							data[i] += data2[i]
+						}
+					} else if (blendOpt.value === "Subtractive") {
+						for (let i = 0; i < data.length; i++) {
+							data[i] -= data2[i]
+						}
+					} else if (blendOpt.value === "Multiplicative") {
+						for (let i = 0; i < data.length; i++) {
+							data[i] *= data2[i] / 122.5
+						}
+					} else if (blendOpt.value === "Dividive") {
+						let output
+						for (let i = 0; i < data.length; i++) {
+							output = data[i] / (data2[i] / 122.5)
+							data[i] = output === Infinity ? 255 : output !== output ? 0 : output
+						}
+					} else if (blendOpt.value === "Traverse") {
+						for (let i = 0; i < data.length; i++) {
+							data[i] = interpolate(data[i], data2[i], 0.5)
+						}
 					}
 				}
 				data2 = params[2].input.checked ? Uint8ClampedArray.from(data2) : data2
