@@ -67,6 +67,9 @@
 		<option>Multiplicative</option>
 		<option>Dividive</option>
 		<option>Traverse</option>
+		<option>R Channel Additive</option>
+		<option>G Channel Additive</option>
+		<option>B Channel Additive</option>
 	</select>
 	<br>
 	<label for="param3" id="labelparam3" style="display: none"></label>
@@ -743,6 +746,18 @@
 						for (let i = 0; i < data.length; i++) {
 							data[i] = interpolate(data[i], data2[i], 0.5)
 						}
+					} else if (blendOpt.value === "R Channel Additive") {
+						for (let i = 0; i < data.length; i += 4) {
+							data[i] = (data[i] + data2[i]) % 256
+						}
+					} else if (blendOpt.value === "G Channel Additive") {
+						for (let i = 1; i < data.length; i += 4) {
+							data[i] = (data[i] + data2[i]) % 256
+						}
+					} else if (blendOpt.value === "B Channel Additive") {
+						for (let i = 2; i < data.length; i += 4) {
+							data[i] = (data[i] + data2[i]) % 256
+						}
 					}
 				} else {
 					if (blendOpt.value === "Additive") {
@@ -766,6 +781,18 @@
 					} else if (blendOpt.value === "Traverse") {
 						for (let i = 0; i < data.length; i++) {
 							data[i] = interpolate(data[i], data2[i], 0.5)
+						}
+					} else if (blendOpt.value === "R Channel Additive") {
+						for (let i = 0; i < data.length; i += 4) {
+							data[i] += data2[i]
+						}
+					} else if (blendOpt.value === "G Channel Additive") {
+						for (let i = 1; i < data.length; i += 4) {
+							data[i] += data2[i]
+						}
+					} else if (blendOpt.value === "B Channel Additive") {
+						for (let i = 2; i < data.length; i += 4) {
+							data[i] += data2[i]
 						}
 					}
 				}
