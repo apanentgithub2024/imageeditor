@@ -38,6 +38,7 @@
 		<option>Noise</option>
 		<option disabled style="color: red">Resizing</option>
 		<option>Change Dimensions Of Bounds To</option>
+		<option>Change Dimensions Of Bounds And Dislocate Columns</option>
 		<option disabled style="color: green">Complex Effects</option>
 		<option>Replace Color With</option>
 		<option>Draw (Marker)</option>
@@ -212,7 +213,7 @@
 			params[0].input.step = "1"
 			params[0].label.style = ""
 			params[0].label.textContent = "Marker Width"
-		} else if (effectSelect.value === "Change Dimensions Of Bounds To") {
+		} else if (effectSelect.value === "Change Dimensions Of Bounds To" || effectSelect.value === "Change Dimensions Of Bounds And Dislocate Columns") {
 			params[0].input.style = ""
 			params[0].input.type = "number"
 			params[0].input.min = "1"
@@ -288,7 +289,7 @@
 			params[1].input.step = ""
 			params[1].label.style = ""
 			params[1].label.textContent = effectSelect.value === "Draw (Marker)" ? "Marker Color" : effectSelect.value === "Draw (Spray Can)" ? "Spray Color" : "Color Replacement"
-		} else if (effectSelect.value === "Change Dimensions Of Bounds To") {
+		} else if (effectSelect.value === "Change Dimensions Of Bounds To" || effectSelect.value === "Change Dimensions Of Bounds And Dislocate Columns") {
 			params[1].input.style = ""
 			params[1].input.type = "number"
 			params[1].input.min = "1"
@@ -304,7 +305,7 @@
 		}
 	})
 function hexToRGB(hex_color) {
-	hex_color = hex_color.replace(/^#/, "")
+	hex_color = hex_color.slice(1)
 	const red = parseInt(hex_color.slice(0, 2), 16)
 	const green = parseInt(hex_color.slice(2, 4), 16)
 	const blue = parseInt(hex_color.slice(4, 6), 16)
@@ -436,6 +437,11 @@ function interpolate(x, y, n) {
 			case 'Change Dimensions Of Bounds To':
 				canvas.width = params[0].input.value
 				canvas.height = params[1].input.value
+				break;
+			case 'Change Dimensions Of Bounds And Dislocate Columns':
+				canvas.width = params[0].input.value
+				canvas.height = params[1].input.value
+				ctx.putImageData(imgData, 0, 0)
 				break;
 			case 'Replace Color With':
 				const target = hexToRGB(params[0].input.value)
@@ -619,7 +625,9 @@ function interpolate(x, y, n) {
 				}
 				break
 		}
-		ctx.putImageData(imgData, 0, 0);
+		if (currentEffect.value !== "Change Dimensions Of Bounds And Dislocate Columns") {
+			ctx.putImageData(imgData, 0, 0)
+		}
 		currentEffect.textContent = `Current Effect: ${effect}`;
 	});
 	const darkCSS = `button, select, option {
