@@ -441,7 +441,8 @@ function interpolate(x, y, n) {
 			case 'Change Dimensions Of Bounds And Dislocate Columns':
 				canvas.width = params[0].input.value
 				canvas.height = params[1].input.value
-				ctx.putImageData(imgData, 0, 0)
+				imgData.width = Number(params[0].input.value)
+				imgData.height = Number(params[1].input.value)
 				break;
 			case 'Replace Color With':
 				const target = hexToRGB(params[0].input.value)
@@ -625,9 +626,7 @@ function interpolate(x, y, n) {
 				}
 				break
 		}
-		if (currentEffect.value !== "Change Dimensions Of Bounds And Dislocate Columns") {
-			ctx.putImageData(imgData, 0, 0)
-		}
+		ctx.putImageData(imgData, 0, 0)
 		currentEffect.textContent = `Current Effect: ${effect}`;
 	});
 	const darkCSS = `button, select, option {
