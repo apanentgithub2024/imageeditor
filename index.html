@@ -643,7 +643,7 @@ function interpolate(x, y, n) {
 				break
 			case 'Flip Horizontally':
 				const eds = Uint8ClampedArray.from(data), datah = imgData.width - 3, mulr = imgData.width * 4
-				for (let y = 0; y < imgData.height; y += mulr) {
+				for (let y = 0; y < data.length; y += mulr) {
 					const eioa = imgData.height * 4 * (y + 1)
 					for (let x = y; x < eioa; x += 4) {
 						data[x] = eds[eioa - x]
