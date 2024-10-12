@@ -6,6 +6,7 @@
 <body>
 <img id="image" style="display: none">
 <input id="file" type="file" accept=".png, .jpeg, .jpg, .gif, .webp, .svg, .jfif, .cur">
+<input id="efile" type="file" accept=".png, .jpeg, .jpg, .gif, .webp, .svg, .jfif, .cur" style="display: none">
 <div id="editor">
 	<canvas id="currentimage"></canvas>
 	<br>
@@ -53,12 +54,23 @@
 		<option>Scatter</option>
 		<option>Swap Pixels</option>
 		<option>Blend RGB Channels Left</option>
+		<option style="color: lime">Blend Another Image</option>
 	</select>
 	<br>
 	<a id="currenteffect"></a>
 	<br>
 	<label for="param1" id="labelparam1" style="display: none"></label>
 	<input id="param1" style="display: none">
+	<select id="blendoptions" style="display: none">
+		<option>Additive</option>
+		<option>Subtractive</option>
+		<option>Multiplicative</option>
+		<option>Dividive</option>
+		<option>Traverse</option>
+	</select>
+	<br>
+	<label for="param3" id="labelparam3" style="display: none"></label>
+	<input id="param3" style="display: none">
 	<br>
 	<label for="param2" id="labelparam2" style="display: none"></label>
 	<input id="param2" style="display: none">
@@ -77,7 +89,9 @@
 	const currentEffect = document.getElementById('currenteffect');
 	const applyEffectButton = document.getElementById('apply');
 	const toggleButton = document.getElementById('toggle');
-	let width, height, prevDrawX, prevDrawY, mouseDown, imgWidth = 300, imgHeight = 150, isToggled;
+	const blendOpt = document.getElementById('blendoptions');
+	const fileInput2 = document.getElementById('efile');
+	let width, height, prevDrawX, prevDrawY, mouseDown, imgWidth = 300, imgHeight = 150, isToggled, blendImage, blendImageLoad;
 	setTimeout(function() {
 		const e = canvas.getBoundingClientRect();
 		[width, height] = [e.left, e.top];
@@ -90,6 +104,10 @@
 		{
 			input: document.getElementById('param2'),
 			label: document.getElementById('labelparam2')
+		},
+		{
+			input: document.getElementById('param3'),
+			label: document.getElementById('labelparam3')
 		}
 	];
 	canvas.onmousedown = function(event) {
@@ -151,9 +169,6 @@
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = function (e) {
-				imageElement.src = e.target.result;
-				imageElement.style.display = 'none';
-				editor.style.display = 'block';
 				const img = new Image();
 				img.onload = function () {
 					canvas.width = img.width;
@@ -163,6 +178,21 @@
 					ctx.drawImage(img, 0, 0);
 				};
 				img.src = e.target.result;
+			};
+			reader.readAsDataURL(file);
+		}
+	});
+	fileInput2.addEventListener('change', function () {
+		const file = fileInput2.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				blendImage = new Image();
+				blendImageLoad = false
+				blendImage.onload = function () {
+					blendImageLoad = true
+				};
+				blendImage.src = e.target.result;
 			};
 			reader.readAsDataURL(file);
 		}
@@ -280,6 +310,9 @@
 			params[0].label.style = ""
 			params[0].label.textContent = "Chance Of Swapping (Percentage)"
 			params[0].input.value = 5
+		} else if (effectSelect.value === "Blend Another Image") {
+			params[0].label.style = ""
+			params[0].label.textContent = "Blend Algorithm"
 		} else {
 			params[0].input.style = "display: none"
 			params[0].label.style = "display: none"
@@ -307,17 +340,35 @@
 			params[1].label.style = "display: none"
 			params[1].label.textContent = ""
 		}
+		if (effectSelect.value === "Blend Another Image") {
+			blendOpt.style = ""
+			fileInput2.style = ""
+			params[2].input.style = ""
+			params[2].input.type = "checkbox"
+			params[2].input.checked = false
+			params[2].label.textContent = "Wrap Values"
+			params[2].label.style = ""
+		} else {
+			blendOpt.style = "display: none"
+			fileInput2.style = "display: none"
+			params[2].input.style = "display: none"
+			params[2].label.style = "display: none"
+			params[2].label.textContent = ""
+		}
 	})
-function hexToRGB(hex_color) {
-	hex_color = hex_color.slice(1)
-	const red = parseInt(hex_color.slice(0, 2), 16)
-	const green = parseInt(hex_color.slice(2, 4), 16)
-	const blue = parseInt(hex_color.slice(4, 6), 16)
-	return [red, green, blue]
-}
-function interpolate(x, y, n) {
-	return x + (y - x) * n
-}
+	blendOpt.addEventListener("change", function() {
+		if (blendOpt.value === ""
+	})
+	function hexToRGB(hex_color) {
+		hex_color = hex_color.slice(1)
+		const red = parseInt(hex_color.slice(0, 2), 16)
+		const green = parseInt(hex_color.slice(2, 4), 16)
+		const blue = parseInt(hex_color.slice(4, 6), 16)
+		return [red, green, blue]
+	}
+	function interpolate(x, y, n) {
+		return x + (y - x) * n
+	}
 	let erraticSin
 	applyEffectButton.addEventListener('click', function () {
 		const effect = effectSelect.value;
@@ -328,7 +379,7 @@ function interpolate(x, y, n) {
 			ctx.drawImage(imageElement, 0, 0);
 			return;
 		}
-		if (effect === "Draw (Marker)") {
+		if (effect === "Draw (Marker)" || effect === "Draw (Spray Can)") {
 			return;
 		}
 		let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -662,6 +713,36 @@ function interpolate(x, y, n) {
 					}
 				}
 				data.set(newData)
+				break
+			case 'Blend Another Image':
+				ctx.clearRect(0, 0, Number(canvas.width), Number(canvas.height))
+				ctx.drawImage(blendImage, 0, 0)
+				let data2 = ctx.getImageData(0, 0, Number(canvas.width), Number(canvas.height))
+				data2 = params[2].input.checked ? Uint8Array.from(data2) : data2
+				if (blendOpt.value === "Additive") {
+					for (let i = 0; i < data.length; i++) {
+						data[i] += data2[i]
+					}
+				} else if (blendOpt.value === "Subtractive") {
+					for (let i = 0; i < data.length; i++) {
+						data[i] -= data2[i]
+					}
+				} else if (blendOpt.value === "Multiplicative") {
+					for (let i = 0; i < data.length; i++) {
+						data[i] *= data2[i] / 122.5
+					}
+				} else if (blendOpt.value === "Dividive") {
+					let output
+					for (let i = 0; i < data.length; i++) {
+						output = data[i] / (data2[i] / 122.5)
+						data[i] = output === Infinity ? 255 : output !== output ? 0 : output
+					}
+				} else if (blendOpt.value === "Traverse") {
+					for (let i = 0; i < data.length; i++) {
+						data[i] = interpolate(data[i], data2[i], 0.5)
+					}
+				}
+				data = params[2].input.checked ? Uint8ClampedArray.from(data) : data
 				break
 		}
 		ctx.putImageData(imgData, 0, 0)
