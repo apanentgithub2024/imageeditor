@@ -328,7 +328,7 @@ function interpolate(x, y, n) {
 			return;
 		}
 		const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		const data = imgData.data;
+		let data = imgData.data;
 		switch (effect) {
 			case 'R Channel':
 				for (let i = 0; i < data.length; i += 4) {
@@ -441,8 +441,7 @@ function interpolate(x, y, n) {
 			case 'Change Dimensions Of Bounds And Dislocate Columns':
 				canvas.width = params[0].input.value
 				canvas.height = params[1].input.value
-				imgData.width = Number(params[0].input.value)
-				imgData.height = Number(params[1].input.value)
+				imgData = new ImageData(imgData, params[0].input.value, params[1].input.value)
 				break;
 			case 'Replace Color With':
 				const target = hexToRGB(params[0].input.value)
