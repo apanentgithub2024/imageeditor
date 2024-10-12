@@ -353,14 +353,34 @@
 			params[2].label.textContent = "Wrap Values"
 			params[2].label.style = ""
 			params[0].input.style = "display: none"
-			params[1].input.style = "display: none"
-			params[1].label.style = "display: none"
+			if (blendOpt.value === "Subtractive") {
+				params[1].label.style = ""
+				params[1].label.textContent = "Is Absolute"
+				params[1].input.style = ""
+				params[1].input.type = "checkbox"
+				params[1].input.checked = params[2].input.checked
+			} else {
+				params[1].input.style = "display: none"
+				params[1].label.style = "display: none"
+			}
 		} else {
 			blendOpt.style = "display: none"
 			fileInput2.style = "display: none"
 			params[2].input.style = "display: none"
 			params[2].label.style = "display: none"
 			params[2].label.textContent = ""
+		}
+	})
+	blendOpt.addEventListener("input", function() {
+		if (blendOpt.value === "Subtractive") {
+			params[1].label.style = ""
+			params[1].label.textContent = "Is Absolute"
+			params[1].input.style = ""
+			params[1].input.type = "checkbox"
+			params[1].input.checked = params[2].input.checked
+		} else {
+			params[1].input.style = "display: none"
+			params[1].label.style = "display: none"
 		}
 	})
 	function hexToRGB(hex_color) {
@@ -729,8 +749,14 @@
 							data[i] = (data[i] + data2[i]) % 256
 						}
 					} else if (blendOpt.value === "Subtractive") {
-						for (let i = 0; i < data.length; i++) {
-							data[i] = (data[i] - data2[i]) % 256
+						if (params[1].input.checked) {
+							for (let i = 0; i < data.length; i++) {
+								data[i] = Math.abs(data[i] - data2[i]) % 256
+							}
+						} else {
+							for (let i = 0; i < data.length; i++) {
+								data[i] = (data[i] - data2[i]) % 256
+							}
 						}
 					} else if (blendOpt.value === "Multiplicative") {
 						for (let i = 0; i < data.length; i++) {
@@ -765,8 +791,14 @@
 							data[i] += data2[i]
 						}
 					} else if (blendOpt.value === "Subtractive") {
-						for (let i = 0; i < data.length; i++) {
-							data[i] -= data2[i]
+						if (params[1].input.checked) {
+							for (let i = 0; i < data.length; i++) {
+								data[i] = Math.abs(data[i] - data2[i])
+							}
+						} else {
+							for (let i = 0; i < data.length; i++) {
+								data[i] -= data2[i]
+							}
 						}
 					} else if (blendOpt.value === "Multiplicative") {
 						for (let i = 0; i < data.length; i++) {
