@@ -642,7 +642,7 @@ function interpolate(x, y, n) {
 			case 'Flip Vertically':
 				break
 			case 'Flip Horizontally':
-				const eds = new Uint8ClampedArray(data.length), casa = imgData.width * 4
+				const newData = new Uint8ClampedArray(data.length), casa = imgData.width * 4
 				let mirroredX
 				for (let y = 0; y < data.length; y += casa) {
 					for (let x = 0; x < casa; x += 4) {
