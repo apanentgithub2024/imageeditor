@@ -441,7 +441,7 @@ function interpolate(x, y, n) {
 			case 'Change Dimensions Of Bounds And Dislocate Columns':
 				canvas.width = params[0].input.value
 				canvas.height = params[1].input.value
-				imgData = new ImageData(new Uint8ClampedArray(data), params[0].input.value, params[1].input.value)
+				imgData = new ImageData(new Uint8ClampedArray(+params[0].input.value * +params[1].input.value * 4), +params[0].input.value, +params[1].input.value)
 				break;
 			case 'Replace Color With':
 				const target = hexToRGB(params[0].input.value)
