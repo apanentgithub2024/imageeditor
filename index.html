@@ -601,20 +601,20 @@ function interpolate(x, y, n) {
 						data[i + 2] = tempee[2]
 						data[i + 3] = tempee[3]
 					}
-					return
-				}
-				for (let i = 0; i < data.length; i += 4) {
-					if (Math.random() < chnce) {
-						ind = Math.floor((Math.random() * data.length) / 4) * 4
-						tempee = [data[ind], data[ind + 1], data[ind + 2], data[ind + 3]]
-						data[ind] = data[i]
-						data[ind + 1] = data[i + 1]
-						data[ind + 2] = data[i + 2]
-						data[ind + 3] = data[i + 3]
-						data[i] = tempee[0]
-						data[i + 1] = tempee[1]
-						data[i + 2] = tempee[2]
-						data[i + 3] = tempee[3]
+				} else {
+					for (let i = 0; i < data.length; i += 4) {
+						if (Math.random() < chnce) {
+							ind = Math.floor((Math.random() * data.length) / 4) * 4
+							tempee = [data[ind], data[ind + 1], data[ind + 2], data[ind + 3]]
+							data[ind] = data[i]
+							data[ind + 1] = data[i + 1]
+							data[ind + 2] = data[i + 2]
+							data[ind + 3] = data[i + 3]
+							data[i] = tempee[0]
+							data[i + 1] = tempee[1]
+							data[i + 2] = tempee[2]
+							data[i + 3] = tempee[3]
+						}
 					}
 				}
 				break
