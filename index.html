@@ -327,8 +327,8 @@ function interpolate(x, y, n) {
 		if (effect === "Draw (Marker)") {
 			return;
 		}
-		const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		let data = imgData.data;
+		let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		const data = imgData.data;
 		switch (effect) {
 			case 'R Channel':
 				for (let i = 0; i < data.length; i += 4) {
