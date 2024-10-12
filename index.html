@@ -127,7 +127,7 @@
 			prevDrawY = (event.clientY + window.pageYOffset) - height;
 		} else if (effectSelect.value === "Draw (Spray Can)") {
 			mouseDown = true;
-			ctx.lineWidth = Number(params[0].input.value);
+			ctx.lineWidth = 1;
 			ctx.lineCap = "round";
 			ctx.strokeStyle = params[1].input.value;
 			ctx.beginPath();
