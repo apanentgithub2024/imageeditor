@@ -332,7 +332,7 @@ function interpolate(x, y, n) {
 			return;
 		}
 		let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-		const data = imgData.data;
+		let data = imgData.data;
 		switch (effect) {
 			case 'R Channel':
 				for (let i = 0; i < data.length; i += 4) {
@@ -640,20 +640,34 @@ function interpolate(x, y, n) {
 				}
 				break
 			case 'Flip Vertically':
-				const dataa = Uint8ClampedArray.from(data)
-				for (let i = 0; i < imgData.width * 4; i += 4) {
-					for (let j = i; j < data.length; j += imgData.width * 4) {
-						data[i] = dataa[i + (imgData.width * imgData.height * 4) - j]
+				const verticalData = new Uint8ClampedArray(data);
+				for (let y = 0; y < imgData.height / 2; y++) {
+					for (let x = 0; x < imgData.width; x++) {
+						const topIndex = (y * imgData.width + x) * 4;
+						const bottomIndex = ((imgData.height - y - 1) * imgData.width + x) * 4;
+						for (let i = 0; i < 4; i++) {
+							const temp = verticalData[topIndex + i];
+							verticalData[topIndex + i] = verticalData[bottomIndex + i];
+							verticalData[bottomIndex + i] = temp;
+						}
 					}
 				}
+				data = verticalData
 				break
 			case 'Flip Horizontally':
-				const dataa2 = Uint8ClampedArray.from(data)
-				for (let i = 0; i < imgData.width * 4; i += 4) {
-					for (let j = 0; i < data.length; j += imgData.width * 4) {
-						data[i] = dataa2[i + imgData.width - j]
+				const horizontalData = new Uint8ClampedArray(data);
+				for (let y = 0; y < imgData.height; y++) {
+					for (let x = 0; x < imgData.width / 2; x++) {
+						const leftIndex = (y * imgData.width + x) * 4;
+						const rightIndex = (y * imgData.width + (imgData.width - x - 1)) * 4;
+						for (let i = 0; i < 4; i++) {
+							const temp = horizontalData[leftIndex + i];
+							horizontalData[leftIndex + i] = horizontalData[rightIndex + i];
+							horizontalData[rightIndex + i] = temp;
+						}
 					}
 				}
+				data = horizontalData
 				break
 		}
 		ctx.putImageData(imgData, 0, 0)
