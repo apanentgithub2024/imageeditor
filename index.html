@@ -41,6 +41,7 @@
 		<option disabled style="color: green">Complex Effects</option>
 		<option>Replace Color With</option>
 		<option>Draw (Marker)</option>
+		<option>Draw (Spray Can)</option>
 		<option>Blend Leftwards</option>
 		<option>Blend Rightwards</option>
 		<option>Left Edge Detection</option>
@@ -97,6 +98,19 @@
 			ctx.stroke();
 			prevDrawX = (event.clientX + window.pageXOffset) - width;
 			prevDrawY = (event.clientY + window.pageYOffset) - height;
+		} else if (effectSelect.value === "Draw (Spray Can)") {
+			mouseDown = true;
+			ctx.lineWidth = Number(params[0].input.value);
+			ctx.lineCap = "round";
+			ctx.strokeStyle = params[1].input.value;
+			ctx.beginPath();
+			for (let i = 0; i < 10; i++) {
+				const w = (event.clientX + window.pageXOffset) - width, h = (event.clientY + window.pageYOffset) - height
+				const e = w + (Math.random() - 0.5) * 40, e2 = h + (Math.random() - 0.5) * 40
+				ctx.moveTo(e, e2)
+				ctx.lineTo(e, e2)
+			}
+			ctx.stroke();
 		} else {
 			mouseDown = false;
 		}
@@ -105,14 +119,25 @@
 		mouseDown = false;
 	}
 	canvas.onmousemove = function(event) {
-		if (mouseDown && effectSelect.value === "Draw (Marker)") {
+		if (mouseDown && (effectSelect.value === "Draw (Marker)" || effectSelect.value === "Draw (Spray Can)")) {
 			mouseDown = true;
 			ctx.beginPath();
-			ctx.moveTo(prevDrawX, prevDrawY);
-			ctx.lineTo((event.clientX + window.pageXOffset) - width, (event.clientY + window.pageYOffset) - height);
-			ctx.stroke();
-			prevDrawX = (event.clientX + window.pageXOffset) - width;
-			prevDrawY = (event.clientY + window.pageYOffset) - height;
+			if (effectSelect.value === "Draw (Marker)") {
+				ctx.moveTo(prevDrawX, prevDrawY);
+				ctx.lineTo((event.clientX + window.pageXOffset) - width, (event.clientY + window.pageYOffset) - height);
+				ctx.stroke();
+				prevDrawX = (event.clientX + window.pageXOffset) - width;
+				prevDrawY = (event.clientY + window.pageYOffset) - height;
+			} else {
+				ctx.beginPath();
+				for (let i = 0; i < 10; i++) {
+					const w = (event.clientX + window.pageXOffset) - width, h = (event.clientY + window.pageYOffset) - height
+					const e = w + (Math.random() - 0.5) * 40, e2 = h + (Math.random() - 0.5) * 40
+					ctx.moveTo(e, e2)
+					ctx.lineTo(e, e2)
+				}
+				ctx.stroke();
+			}
 		}
 	}
 	fileInput.addEventListener('change', function () {
@@ -245,14 +270,14 @@
 			params[0].label.style = "display: none"
 			params[0].label.textContent = ""
 		}
-		if (effectSelect.value === "Replace Color With" || effectSelect.value === "Draw (Marker)") {
+		if (effectSelect.value === "Replace Color With" || effectSelect.value === "Draw (Marker)" || effectSelect.value === "Draw (Spray Can)") {
 			params[1].input.style = ""
 			params[1].input.type = "color"
 			params[1].input.min = ""
 			params[1].input.max = ""
 			params[1].input.step = ""
 			params[1].label.style = ""
-			params[1].label.textContent = effectSelect.value === "Draw (Marker)" ? "Marker Color" : "Color Replacement"
+			params[1].label.textContent = effectSelect.value === "Draw (Marker)" ? "Marker Color" : effectSelect.value === "Draw (Spray Can)" ? "Spray Color" : "Color Replacement"
 		} else if (effectSelect.value === "Change Dimensions Of Bounds To") {
 			params[1].input.style = ""
 			params[1].input.type = "number"
