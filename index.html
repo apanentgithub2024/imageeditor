@@ -96,7 +96,7 @@
 	const blendOpt = document.getElementById('blendoptions');
 	const fileInput2 = document.getElementById('efile');
 	const opopt = document.getElementById('opopt');
-	let width, height, prevDrawX, prevDrawY, mouseDown, imgWidth = 300, imgHeight = 150, isToggled, blendImage, blendImageLoad;
+	let width, height, prevDrawX, prevDrawY, mouseDown, imgWidth = 300, imgHeight = 150, isToggled, blendImage, blendImageLoad, isDDD = false;
 	setTimeout(function() {
 		const e = canvas.getBoundingClientRect();
 		[width, height] = [e.left, e.top];
@@ -388,12 +388,15 @@
 			params[2].input.style = "display: none"
 			params[2].label.style = "display: none"
 		} else {
-			params[2].input.style = ""
-			params[2].input.type = "checkbox"
-			params[2].input.checked = false
-			params[2].label.textContent = "Wrap Values"
-			params[2].label.style = ""
+			if (isDDD !== blendOpt.value) {
+				params[2].input.style = ""
+				params[2].input.type = "checkbox"
+				params[2].input.checked = false
+				params[2].label.textContent = "Wrap Values"
+				params[2].label.style = ""
+			}
 		}
+		isDDD = blendOpt.value
 	})
 	params[2].input.addEventListener("input", function() {
 		if (effectSelect.value === "Blend Another Image") {
