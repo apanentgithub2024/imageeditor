@@ -70,6 +70,7 @@
 		<option>R Channel Additive</option>
 		<option>G Channel Additive</option>
 		<option>B Channel Additive</option>
+		<option id="opopt">Cutout First Image To Shape Into Second Image (Opacity-Based)</option>
 	</select>
 	<br>
 	<label for="param3" id="labelparam3" style="display: none"></label>
@@ -94,6 +95,7 @@
 	const toggleButton = document.getElementById('toggle');
 	const blendOpt = document.getElementById('blendoptions');
 	const fileInput2 = document.getElementById('efile');
+	const opopt = document.getElementById('opopt');
 	let width, height, prevDrawX, prevDrawY, mouseDown, imgWidth = 300, imgHeight = 150, isToggled, blendImage, blendImageLoad;
 	setTimeout(function() {
 		const e = canvas.getBoundingClientRect();
@@ -381,6 +383,13 @@
 		} else {
 			params[1].input.style = "display: none"
 			params[1].label.style = "display: none"
+		}
+	})
+	params[1].addEventListener("input", function() {
+		if (effectSelect.value === "Blend Another Image") {
+			opopt.disabled = params[1].input.checked
+		} else {
+			opopt.disabled = false
 		}
 	})
 	function hexToRGB(hex_color) {
@@ -825,6 +834,10 @@
 					} else if (blendOpt.value === "B Channel Additive") {
 						for (let i = 2; i < data.length; i += 4) {
 							data[i] += data2[i]
+						}
+					} else if (blendOpt.value === "Cutout First Image To Shape Into Second Image (Opacity-Based)") {
+						for (let i = 3; i < data.length; i += 4) {
+							data[i] *= data2[i] / 255
 						}
 					}
 				}
