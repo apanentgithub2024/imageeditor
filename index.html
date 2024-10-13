@@ -384,10 +384,20 @@
 			params[1].input.style = "display: none"
 			params[1].label.style = "display: none"
 		}
+		if (blendOpt.value === "Cutout First Image To Shape Into Second Image (Opacity-Based)") {
+			params[2].input.style = "display: none"
+			params[2].label.style = "display: none"
+		} else {
+			params[2].input.style = ""
+			params[2].input.type = "checkbox"
+			params[2].input.checked = false
+			params[2].label.textContent = "Wrap Values"
+			params[2].label.style = ""
+		}
 	})
-	params[1].input.addEventListener("input", function() {
+	params[2].input.addEventListener("input", function() {
 		if (effectSelect.value === "Blend Another Image") {
-			opopt.disabled = params[1].input.checked
+			opopt.disabled = params[2].input.checked
 		} else {
 			opopt.disabled = false
 		}
@@ -407,7 +417,7 @@
 		const effect = effectSelect.value;
 		if (effect === "Restore Original Image") {
 			canvas.width = imgWidth;
-			canvas.height = imgHeight;
+		 	canvas.height = imgHeight;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(imageElement, 0, 0);
 			return;
