@@ -385,7 +385,7 @@
 			params[1].label.style = "display: none"
 		}
 	})
-	params[1].addEventListener("input", function() {
+	params[1].input.addEventListener("input", function() {
 		if (effectSelect.value === "Blend Another Image") {
 			opopt.disabled = params[1].input.checked
 		} else {
